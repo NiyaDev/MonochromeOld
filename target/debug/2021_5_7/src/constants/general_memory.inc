@@ -1,0 +1,11 @@
+
+GENERAL_MEMORY_SIZE	equ 10000
+PLAYER_CAN_MOVE		equ 	0
+
+;; Memory offsets
+WINDOW				equ 0
+
+BYTE_WORK			equ 100
+WORD_WORK			equ 101
+DWRD_WORK			equ 103
+QWRD_WORK			equ 111
