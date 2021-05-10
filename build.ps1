@@ -47,6 +47,17 @@ if ($copyFiles -eq $TRUE) {
 	Copy-Item -Path ".\data" -Destination ".\$executableLocation" -Force -Recurse
 }
 
+#Moving libraries
+if ($copyFiles -eq $TRUE) {
+	Copy-Item -Path ".\lib\*" -Destination ".\$executableLocation" -Force -Recurse
+}
+
+#Backing up src
+if ($copyFiles -eq $TRUE) {
+	Copy-Item -Path ".\src" -Destination ".\$executableLocation" -Force -Recurse
+}
+
+
 if ($linux -eq $TRUE) {
 	$executableExt = ".elf"
 } else {
