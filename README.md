@@ -1,6 +1,5 @@
-Spirit of Nations
+Title:		Monochrome
 
-Title:		Spirit of Nations
 Language:	Assembler (FASM)
-Dependencies:
-		Raylib
+
+Dependencies: Raylib
