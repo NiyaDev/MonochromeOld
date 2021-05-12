@@ -30,38 +30,38 @@ update:
 	shl al,3
 	or bl,al
 
+	mov rax,[player_memory]
+	mov word[rax+PlayerData.ctrData.direction],bx
+	
+
 	xor rax,rax
 	xor rbx,rbx
-
-
-	mov rax,[player_memory]
-	mov word[rax+PlayerData.control.direction],bx
 
 	;;Reads the bits
 	mov		r8,[general_memory]
 	mov		r9,[player_memory]
 	mov		dword [r8+GeneralMemory.dword],10
 .horizontal_neg:
-	bt		word[r9+PlayerData.control.direction],0
+	bt		word[r9+PlayerData.ctrData.direction],0
 	jnc		.horizontal_pos
 	fld		dword [r9+PlayerData.camera.target.x]
 	fisub	dword [r8+GeneralMemory.dword]
 	fstp	dword [r9+PlayerData.camera.target.x]
 .horizontal_pos:
-	bt		word[r9+PlayerData.control.direction],1
+	bt		word[r9+PlayerData.ctrData.direction],1
 	jnc		.vertical_neg
 	fld		dword [r9+PlayerData.camera.target.x]
 	fiadd	dword [r8+GeneralMemory.dword]
 	fstp	dword [r9+PlayerData.camera.target.x]
 
 .vertical_neg:
-	bt		word[r9+PlayerData.control.direction],2
+	bt		word[r9+PlayerData.ctrData.direction],2
 	jnc		.vertical_pos
 	fld		dword [r9+PlayerData.camera.target.y]
 	fisub	dword [r8+GeneralMemory.dword]
 	fstp	dword [r9+PlayerData.camera.target.y]
 .vertical_pos:
-	bt		word[r9+PlayerData.control.direction],3
+	bt		word[r9+PlayerData.ctrData.direction],3
 	jnc		.exit
 	fld		dword [r9+PlayerData.camera.target.y]
 	fiadd	dword [r8+GeneralMemory.dword]
