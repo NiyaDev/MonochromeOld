@@ -30,6 +30,7 @@ import	raylib, InitWindow,			'InitWindow',\
 				ImageResizeNN,		'ImageResizeNN',\
 				DrawTexture,		'DrawTexture',\
 				DrawTextureRec,		'DrawTextureRec',\
+				DrawTextureNPatch,	'DrawTextureNPatch',\
 				LoadTextureFromImage,'LoadTextureFromImage',\
 				LoadTexture,		'LoadTexture',\
 				UnloadTexture,		'UnloadTexture',\

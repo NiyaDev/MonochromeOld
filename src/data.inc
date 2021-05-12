@@ -10,10 +10,6 @@ section '.data' readable writeable
 	general_memory		dq		0
 	player_memory		dq		0
 
-	;;=  Game camera
-	;;TODO: move camera into PlayerData
-	camera				Camera2D
-
 	;;=  FileNames
 	;;TODO: create a file manifest
 	player_overworld_m_text		db		'data/sprites/characters/spr_player_overworld_m.png',0

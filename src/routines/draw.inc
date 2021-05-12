@@ -18,10 +18,12 @@ draw:
 	call [ClearBackground]
 
 .camera:
-	;;BeginMode2D(&camera)
-	lea rcx,[camera]
+	;;BeginMode2D(&camera);
+	mov rax,[player_memory]
+	lea rcx,[rax+PlayerData.camera]
 	call [BeginMode2D]
 
+	;;DrawRectangle(-100,100,200,100,WHITE);
 	mov rcx,-100
 	mov rdx,100
 	mov r8,200
@@ -29,6 +31,7 @@ draw:
 	mov dword [rsp+0x20],WHITE
 	call [DrawRectangle]
 
+	;;DrawTexture(&PlayerData.spriteTexture,300,300,WHITE);
 	mov rax,[player_memory]
 	lea rcx,[rax+PlayerData.spriteTexture]
 	mov rdx,300
@@ -36,10 +39,21 @@ draw:
 	mov r9,WHITE
 	call [DrawTexture]
 
+	;;DrawTextureRec(&PlayerData.spriteTexture,&PlayerData.spriteRect,{PlayerData.camera.target.x-64f,PlayerData.camera.target.y-64f},WHITE);
 	mov rax,[player_memory]
 	lea rcx,[rax+PlayerData.spriteTexture]
 	lea rdx,[rax+PlayerData.spriteRect]
-	mov r8,$40a0000040a00000
+	mov r8,qword[rax+PlayerData.camera.target]
+	mov rax,[general_memory]
+	mov qword[rax+GeneralMemory.qword],r8
+	mov dword[rax+GeneralMemory.dword],64f
+	fld dword[rax+GeneralMemory.qword]
+	fsub dword[rax+GeneralMemory.dword]
+	fstp dword[rax+GeneralMemory.qword]
+	fld dword[rax+GeneralMemory.qword+4]
+	fsub dword[rax+GeneralMemory.dword]
+	fstp dword[rax+GeneralMemory.qword+4]
+	mov r8,qword[rax+GeneralMemory.qword]
 	mov r9d,WHITE
 	call [DrawTextureRec]
 

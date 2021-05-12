@@ -30,35 +30,42 @@ update:
 	shl al,3
 	or bl,al
 
+	xor rax,rax
+	xor rbx,rbx
+
+
+	mov rax,[player_memory]
+	mov word[rax+PlayerData.control.direction],bx
+
 	;;Reads the bits
-	mov rax,[general_memory]
-	mov dword [rax+GeneralMemory.dword],10
+	mov		r8,[general_memory]
+	mov		r9,[player_memory]
+	mov		dword [r8+GeneralMemory.dword],10
 .horizontal_neg:
-	bt rbx,0
-	jnc .horizontal_pos
-	fld dword [camera.target.x]
-	fisub dword [rax+GeneralMemory.dword]
-	fstp dword [camera.target.x]
+	bt		word[r9+PlayerData.control.direction],0
+	jnc		.horizontal_pos
+	fld		dword [r9+PlayerData.camera.target.x]
+	fisub	dword [r8+GeneralMemory.dword]
+	fstp	dword [r9+PlayerData.camera.target.x]
 .horizontal_pos:
-	bt rbx,1
-	jnc .vertical_neg
-	fld dword [camera.target.x]
-	fiadd dword [rax+GeneralMemory.dword]
-	fstp dword [camera.target.x]
+	bt		word[r9+PlayerData.control.direction],1
+	jnc		.vertical_neg
+	fld		dword [r9+PlayerData.camera.target.x]
+	fiadd	dword [r8+GeneralMemory.dword]
+	fstp	dword [r9+PlayerData.camera.target.x]
 
 .vertical_neg:
-	bt rbx,2
-	jnc .vertical_pos
-	fld dword [camera.target.y]
-	fisub dword [rax+GeneralMemory.dword]
-	fstp dword [camera.target.y]
+	bt		word[r9+PlayerData.control.direction],2
+	jnc		.vertical_pos
+	fld		dword [r9+PlayerData.camera.target.y]
+	fisub	dword [r8+GeneralMemory.dword]
+	fstp	dword [r9+PlayerData.camera.target.y]
 .vertical_pos:
-	bt rbx,3
-	jnc .exit
-	fld dword [camera.target.y]
-	fiadd dword [rax+GeneralMemory.dword]
-	fstp dword [camera.target.y]
-	;call TestControlBit
+	bt		word[r9+PlayerData.control.direction],3
+	jnc		.exit
+	fld		dword [r9+PlayerData.camera.target.y]
+	fiadd	dword [r8+GeneralMemory.dword]
+	fstp	dword [r9+PlayerData.camera.target.y]
 	
 .exit:
 	add rsp,$28
