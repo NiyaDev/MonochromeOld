@@ -15,8 +15,9 @@ struc KeyBindings {
 
 
 struc PlayerData {
-	.spriteTexture	Texture2D		;20-bytes
-	.spriteRect		Rectangle		;16-bytes
+	.sprite			AnimatedSprite	;46-bytes
+	;.spriteTexture	Texture2D		;20-bytes
+	;.spriteRect		Rectangle		;16-bytes
 	.camera			Camera2D		;34-bytes
 	.ctrData		ControlData		; 4-bytes
 	.ctrBindings	KeyBindings		; 8-bytes

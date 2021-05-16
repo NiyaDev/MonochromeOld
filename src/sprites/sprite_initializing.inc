@@ -4,9 +4,6 @@
 ;*/
 
 
-CONST_resizeFactor equ 2	;(ImageDimensions)*2^CONST_resizeFactor
-
-
 ;;=  Grabs a file from the input filename, outputs a resized texture, and frees the image
 ;;=  RCX = &filename		RDX = &texture
 import_sprite:
