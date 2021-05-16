@@ -13,6 +13,7 @@ section '.data' readable writeable
 
 	;;=  FileNames
 	;;TODO: create a file manifest
+	icon_text					db		'data/Icon.png',0
 	player_overworld_m_text		db		'data/sprites/characters/spr_player_overworld_m.png',0
 	player_overworld_f_text		db		'data/sprites/characters/spr_player_overworld_f.png',0
 
@@ -26,3 +27,9 @@ section '.data' readable writeable
 	walk_up		dd	CONST_sprite_3,CONST_sprite_4,CONST_sprite_3,CONST_sprite_5,CONST_sprite_3,CONST_sprite_4,CONST_sprite_3,CONST_sprite_5
 	walk_left	dd	CONST_sprite_6,CONST_sprite_7,CONST_sprite_6,CONST_sprite_7,CONST_sprite_6,CONST_sprite_7,CONST_sprite_6,CONST_sprite_7
 	walk_right	dd	CONST_sprite_8,CONST_sprite_9,CONST_sprite_8,CONST_sprite_9,CONST_sprite_8,CONST_sprite_9,CONST_sprite_8,CONST_sprite_9
+
+section '.rsrc' resource data readable
+	directory RT_ICON, icons, RT_GROUP_ICON, group_icons
+	resource icons, 1, LANG_NEUTRAL, icon_data
+	resource group_icons, 5, LANG_NEUTRAL, main_icon
+	icon main_icon, icon_data, 'data/icon.ico'

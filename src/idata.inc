@@ -37,4 +37,5 @@ import	raylib, InitWindow,			'InitWindow',\
 				UpdateCamera,		'UpdateCamera',\
 				BeginMode2D,		'BeginMode2D',\
 				EndMode2D,			'EndMode2D',\
-				DrawRectangle,		'DrawRectangle'
+				DrawRectangle,		'DrawRectangle',\
+				SetWindowIcon,		'SetWindowIcon'

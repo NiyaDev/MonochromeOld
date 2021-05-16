@@ -4,7 +4,7 @@ include 'constants.inc'
 
 
 ;;=  Windows
-format PE64 NX GUI 6.0
+format PE64 NX console 6.0
 section '.text' code readable executable
 ;;=  Linux
 ;format ELF64 executable 3

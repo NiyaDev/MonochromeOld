@@ -17,6 +17,7 @@ program_init:
 	mov ecx,60
 	call [SetTargetFPS]
 
+
 .allocate_general_memory:
 	;;general_memory = MemAlloc(CONST_memorySize)
 	mov rcx,CONST_memorySize
@@ -37,6 +38,18 @@ program_init:
 	call CleanMemory
 
 .initialize_player_sprites:
+	;;SetWindowIcon(&image)
+	mov rax,[general_memory]
+	lea rcx,[rax+GeneralMemory.image]
+	lea rdx,[icon_text]
+	call [LoadImageRL]
+	mov rax,[general_memory]
+	lea rcx,[rax+GeneralMemory.image]
+	call [SetWindowIcon]
+	mov rax,[general_memory]
+	lea rcx,[rax+GeneralMemory.image]
+	call [UnloadImage]
+
 	;;import_sprite(&player_overworld_m_text,&PlayerData.spriteTexture)
 	lea rcx,[player_overworld_m_text]
 	mov rax,[player_memory]
