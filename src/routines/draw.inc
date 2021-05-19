@@ -40,7 +40,11 @@ draw:
 	call [DrawTexture]
 
 	;;Draw player sprite
-	call draw_player
+;	call draw_player
+	mov		r8,[player_memory]
+	lea		rcx,[r8+PlayerData.sprite]
+	mov		rdx,[r8+PlayerData.camera.target]
+	call	draw_animated_sprite
 
 	;;EndMode2D()
 	call [EndMode2D]

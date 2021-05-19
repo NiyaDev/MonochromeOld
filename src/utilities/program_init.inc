@@ -17,7 +17,6 @@ program_init:
 	mov ecx,60
 	call [SetTargetFPS]
 
-
 .allocate_general_memory:
 	;;general_memory = MemAlloc(CONST_memorySize)
 	mov rcx,CONST_memorySize
@@ -28,14 +27,16 @@ program_init:
 	mov rdx,CONST_memorySize
 	call CleanMemory
 .allocate_player_memory:
-	;;player_memory = MemAlloc(CONST_memorySize)
+	;;player_memory = MemAlloc(CONST_memorySize);
 	mov rcx,CONST_memorySize
 	call [MemAlloc]
 	mov [player_memory],rax
-	;;CleanMemory(&player_memory,CONST_memorySize)
+	;;CleanMemory(&player_memory,CONST_memorySize);
 	mov rcx,[player_memory]
 	mov rdx,CONST_memorySize
 	call CleanMemory
+.allocate_aniamtion_memory:
+	call load_animations
 
 .initialize_player_sprites:
 	;;SetWindowIcon(&image)
@@ -64,9 +65,11 @@ program_init:
 	mov dword [rax+PlayerData.sprite.rect.height],64f
 
 	;;Sets initial animation
-	lea rcx,[rax+PlayerData.sprite.curClip]
-	mov rdx,4
-	call set_animation
+	mov		r8,[player_memory]
+	mov		r9,[animation_memory]
+	mov		rbx,[r9+32]
+	mov		[r8+PlayerData.sprite.frameTime],10h
+	mov		[r8+PlayerData.sprite.curClip],rbx
 
 .setup_camera:
 	;;camera = {0,0,CONST_windowWidthHalf,CONST_windowHeightHalf,1f};
@@ -83,3 +86,4 @@ program_init:
 
 include 'clean_memory.inc'
 include '../sprites/sprite_initializing.inc'
+include '../sprites/animation_loading.inc'

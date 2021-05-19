@@ -18,9 +18,16 @@ CONST_sprite_8	equ	512f
 CONST_sprite_9	equ	576f
 
 
-struc AnimatedSprite {			;46-bytes
+struc AnimatedSprite {			;48-bytes
 	.texture	Texture2D		;20-bytes
 	.rect		Rectangle		;16-bytes
 	.curClip	dq		0		; 8-bytes
-	.timer		dw		0		; 2-byte
+	.curFrame	db		0		; 1-byte
+	.frameTime	db		0		; 1-byte
+	.timer		dw		0		; 2-bytes
 }
+
+virtual at 0
+	AnimatedSprite	AnimatedSprite
+	sizeof.AnimatedSprite = $ - AnimatedSprite
+end virtual

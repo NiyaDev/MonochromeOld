@@ -6,7 +6,18 @@
 ;;=  Standard Update call
 update:
 	sub rsp,$28
+
+	mov		rcx,KEY_Z
+	call	[IsKeyDown]
+	cmp		al,0
+	je		.controls
+
+;	mov		r9,[player_memory]
+;	lea		rcx,[r9+PlayerData.sprite]
+;	mov		rdx,4
+;	call	change_animated_sprite
 	
+.controls:
 	;;Checks each key, then shifts the response into position
 	xor rax,rax
 	xor rbx,rbx
@@ -47,6 +58,10 @@ update:
 	fld		dword [r9+PlayerData.camera.target.x]
 	fisub	dword [r8+GeneralMemory.dword]
 	fstp	dword [r9+PlayerData.camera.target.x]
+
+	lea		rcx,[r9+PlayerData.sprite]
+	mov		rdx,6
+	call	change_animated_sprite
 .horizontal_pos:
 	bt		word[r9+PlayerData.ctrData.direction],1
 	jnc		.vertical_neg
@@ -54,18 +69,30 @@ update:
 	fiadd	dword [r8+GeneralMemory.dword]
 	fstp	dword [r9+PlayerData.camera.target.x]
 
+	lea		rcx,[r9+PlayerData.sprite]
+	mov		rdx,7
+	call	change_animated_sprite
+
 .vertical_neg:
 	bt		word[r9+PlayerData.ctrData.direction],2
 	jnc		.vertical_pos
 	fld		dword [r9+PlayerData.camera.target.y]
 	fisub	dword [r8+GeneralMemory.dword]
 	fstp	dword [r9+PlayerData.camera.target.y]
+
+	lea		rcx,[r9+PlayerData.sprite]
+	mov		rdx,5
+	call	change_animated_sprite
 .vertical_pos:
 	bt		word[r9+PlayerData.ctrData.direction],3
 	jnc		.exit
 	fld		dword [r9+PlayerData.camera.target.y]
 	fiadd	dword [r8+GeneralMemory.dword]
 	fstp	dword [r9+PlayerData.camera.target.y]
+
+	lea		rcx,[r9+PlayerData.sprite]
+	mov		rdx,4
+	call	change_animated_sprite
 	
 .exit:
 	add rsp,$28
