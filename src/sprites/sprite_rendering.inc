@@ -53,15 +53,15 @@ draw_animated_sprite:
 	mov		rbx,[general_memory]
 	lea		rcx,[r9+AnimatedSprite.texture]
 	mov		r8,rdx
-	mov		qword[rbx+GeneralMemory.qword],r8
-	mov		dword[rbx+GeneralMemory.dword],64f
-	fld		dword[rbx+GeneralMemory.qword]
-	fsub	dword[rbx+GeneralMemory.dword]
-	fstp	dword[rbx+GeneralMemory.qword]
-	fld		dword[rbx+GeneralMemory.qword+4]
-	fsub	dword[rbx+GeneralMemory.dword]
-	fstp	dword[rbx+GeneralMemory.qword+4]
-	mov		r8,qword[rbx+GeneralMemory.qword]
+;	mov		qword[rbx+GeneralMemory.qword],r8
+;	mov		dword[rbx+GeneralMemory.dword],64f
+;	fld		dword[rbx+GeneralMemory.qword]
+;	fsub	dword[rbx+GeneralMemory.dword]
+;	fstp	dword[rbx+GeneralMemory.qword]
+;	fld		dword[rbx+GeneralMemory.qword+4]
+;	fsub	dword[rbx+GeneralMemory.dword]
+;	fstp	dword[rbx+GeneralMemory.qword+4]
+;	mov		r8,qword[rbx+GeneralMemory.qword]
 	lea		rdx,[r9+AnimatedSprite.rect]
 	mov		r9d,WHITE
 	call	[DrawTextureRec]
@@ -70,7 +70,7 @@ draw_animated_sprite:
 	ret
 
 
-;;=  ChangeAnimation(AnimatedSprite:&sprite, int:animation);
+;;=  void ChangeAnimation(AnimatedSprite:&sprite, int:animation);
 ;;=  RCX = &sprite		RDX = animation
 ;;=  	Changes the current playing animation in the
 ;;=		pointed to AnimatedSprite to the animation input.

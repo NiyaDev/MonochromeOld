@@ -22,5 +22,5 @@ program_exit:
 	call [CloseWindowRL]
 
 	;;ExitProcess(0)
-	mov rcx,0
-	call [ExitProcess]
+;	mov rcx,0
+;	call [ExitProcess]

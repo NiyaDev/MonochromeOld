@@ -8,7 +8,14 @@ struc GeneralMemory {
 	.qword	dq	0
 	.byte	db	0
 	.dword	dd	0
+	.v2		Vector2	0,0
 	.image	Image
+}
+
+struc Entity {
+	.isMoving	db		0
+	.tilePos	Vector2	0,0
+	.worldPos	Vector2	0,0
 }
 
 virtual at 0

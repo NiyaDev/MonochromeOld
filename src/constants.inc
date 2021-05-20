@@ -2,8 +2,8 @@
 ;;=  Program Constants
 CONST_windowWidth		equ 1080
 CONST_windowHeight		equ  720
-CONST_windowWidthHalf	equ  540f
-CONST_windowHeightHalf	equ  360f
+CONST_windowWidthHalf	equ  508f	;476f	;540f
+CONST_windowHeightHalf	equ  328f	;296f	;360f
 
 CONST_anim_0	equ	0f
 CONST_anim_1	equ	64f

@@ -45,55 +45,95 @@ update:
 	mov word[rax+PlayerData.ctrData.direction],bx
 	
 
-	xor rax,rax
-	xor rbx,rbx
+	;
+	test	word[rax+PlayerData.ctrData.direction],1000b
+	jnz		.move_down
+	test	word[rax+PlayerData.ctrData.direction],0100b
+	jnz		.move_up
+	test	word[rax+PlayerData.ctrData.direction],0010b
+	jnz		.move_right
+	test	word[rax+PlayerData.ctrData.direction],0001b
+	jnz		.move_left
+	jmp		.exit
 
-	;;Reads the bits
-	mov		r8,[general_memory]
-	mov		r9,[player_memory]
-	mov		dword [r8+GeneralMemory.dword],10
-.horizontal_neg:
-	bt		word[r9+PlayerData.ctrData.direction],0
-	jnc		.horizontal_pos
-	fld		dword [r9+PlayerData.camera.target.x]
-	fisub	dword [r8+GeneralMemory.dword]
-	fstp	dword [r9+PlayerData.camera.target.x]
+.move_down:
+	mov		rdx,0
+	jmp		.move
+.move_right:
+	mov		rdx,1
+	jmp		.move
+.move_up:
+	mov		rdx,2
+	jmp		.move
+.move_left:
+	mov		rdx,3
+	jmp		.move
 
-	lea		rcx,[r9+PlayerData.sprite]
-	mov		rdx,6
-	call	change_animated_sprite
-.horizontal_pos:
-	bt		word[r9+PlayerData.ctrData.direction],1
-	jnc		.vertical_neg
-	fld		dword [r9+PlayerData.camera.target.x]
-	fiadd	dword [r8+GeneralMemory.dword]
-	fstp	dword [r9+PlayerData.camera.target.x]
+.move:
+	mov		r8,[player_memory]
+	mov		rcx,[r8+PlayerData.camera.target]
+	call	move_direction
+	mov		r8,[player_memory]
+	mov		[r8+PlayerData.camera.target],rax
 
-	lea		rcx,[r9+PlayerData.sprite]
-	mov		rdx,7
-	call	change_animated_sprite
-
-.vertical_neg:
-	bt		word[r9+PlayerData.ctrData.direction],2
-	jnc		.vertical_pos
-	fld		dword [r9+PlayerData.camera.target.y]
-	fisub	dword [r8+GeneralMemory.dword]
-	fstp	dword [r9+PlayerData.camera.target.y]
-
-	lea		rcx,[r9+PlayerData.sprite]
-	mov		rdx,5
-	call	change_animated_sprite
-.vertical_pos:
-	bt		word[r9+PlayerData.ctrData.direction],3
-	jnc		.exit
-	fld		dword [r9+PlayerData.camera.target.y]
-	fiadd	dword [r8+GeneralMemory.dword]
-	fstp	dword [r9+PlayerData.camera.target.y]
-
-	lea		rcx,[r9+PlayerData.sprite]
-	mov		rdx,4
+	lea		rcx,[r8+PlayerData.sprite]
+;	mov		rdx,7
+	add		rdx,4
 	call	change_animated_sprite
 	
 .exit:
 	add rsp,$28
 	ret
+
+
+include '../utilities/overworld/movement_overworld.inc'
+
+;;
+;xor rax,rax
+;	xor rbx,rbx
+;
+;	;;Reads the bits
+;	mov		r8,[general_memory]
+;	mov		r9,[player_memory]
+;	mov		dword [r8+GeneralMemory.dword],10
+;.horizontal_neg:
+;	bt		word[r9+PlayerData.ctrData.direction],0
+;	jnc		.horizontal_pos
+;	fld		dword [r9+PlayerData.camera.target.x]
+;	fisub	dword [r8+GeneralMemory.dword]
+;	fstp	dword [r9+PlayerData.camera.target.x]
+
+;	lea		rcx,[r9+PlayerData.sprite]
+;	mov		rdx,6
+;	call	change_animated_sprite
+;.horizontal_pos:
+;	bt		word[r9+PlayerData.ctrData.direction],1
+;	jnc		.vertical_neg
+;	fld		dword [r9+PlayerData.camera.target.x]
+;	fiadd	dword [r8+GeneralMemory.dword]
+;	fstp	dword [r9+PlayerData.camera.target.x]
+;
+;	lea		rcx,[r9+PlayerData.sprite]
+;	mov		rdx,7
+;	call	change_animated_sprite
+;
+;.vertical_neg:
+;	bt		word[r9+PlayerData.ctrData.direction],2
+;	jnc		.vertical_pos
+;	fld		dword [r9+PlayerData.camera.target.y]
+;	fisub	dword [r8+GeneralMemory.dword]
+;	fstp	dword [r9+PlayerData.camera.target.y]
+;
+;	lea		rcx,[r9+PlayerData.sprite]
+;	mov		rdx,5
+;	call	change_animated_sprite
+;.vertical_pos:
+;	bt		word[r9+PlayerData.ctrData.direction],3
+;	jnc		.exit
+;	fld		dword [r9+PlayerData.camera.target.y]
+;	fiadd	dword [r8+GeneralMemory.dword]
+;	fstp	dword [r9+PlayerData.camera.target.y]
+;
+;	lea		rcx,[r9+PlayerData.sprite]
+;	mov		rdx,4
+;	call	change_animated_sprite

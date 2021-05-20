@@ -1,11 +1,15 @@
 ;;=  Windows
 section '.idata' import data readable writeable
-;;=  Linux
-;segment readable writeable
 library kernel32,	'KERNEL32.DLL',\
 		user32,		'USER32.DLL',\
 		msvcrt,		'MSVCRT.DLL',\
 		raylib,		'RAYLIB.DLL'
+;;=  Linux
+;segment readable writeable
+;library raylib,		'LIBRAYLIB.SO';,\
+;		user32,		'USER32.A',\
+;		msvcrt,		'MSVCRT.A',\
+;		kernel32,	'KERNEL32.A'
 include 'include/api/kernel32.inc'
 include 'include/api/user32.inc'
 import	msvcrt, printf,				'printf'
