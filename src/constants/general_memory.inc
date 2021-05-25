@@ -1,3 +1,8 @@
+;*/
+;* @Date:		5/4/21
+;* @Author:		Szyfr
+;*/
+
 
 CONST_memorySize	equ 10000	;Total of: 10,000 bytes
 
@@ -13,10 +18,18 @@ struc GeneralMemory {
 }
 
 struc Entity {
-	.isMoving	db		0
-	.tilePos	Vector2	0,0
-	.worldPos	Vector2	0,0
-}
+	.sprite		AnimatedSprite	;46-bytes
+	.isMoving	db		0		; 1-byte
+	.tilePos	Vector2	0,0		; 8-bytes
+	.worldPos	Vector2	0,0		; 8-bytes
+	.direction	db		0		; 1-byte
+}	;64-bytes
+
+
+virtual at 0
+	Entity	Entity
+	sizeof.Entity = $ - Entity
+end virtual
 
 virtual at 0
 	GeneralMemory	GeneralMemory

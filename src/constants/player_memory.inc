@@ -1,3 +1,9 @@
+;*/
+;* @Date:		5/8/21
+;* @Author:		Szyfr
+;*/
+
+
 struc ControlData {
 	.direction		dw		0
 	.action			dw		0
@@ -15,11 +21,11 @@ struc KeyBindings {
 
 
 struc PlayerData {
-	.sprite			AnimatedSprite	;46-bytes
+	.entity			Entity			;64-bytes
 	.camera			Camera2D		;34-bytes
 	.ctrData		ControlData		; 4-bytes
 	.ctrBindings	KeyBindings		; 8-bytes
-}
+}	;110-bytes
 
 virtual at 0
 	PlayerData	PlayerData

@@ -1,3 +1,9 @@
+;*/
+;* @Date:		5/4/21
+;* @Author:		Szyfr
+;*/
+
+
 ;;=  Color definitions
 WHITE			equ	$ffffffff
 RAYWHITE		equ	$fff5f5f5

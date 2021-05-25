@@ -1,5 +1,5 @@
 ;*/
-;* @Date:		5/18/21
+;* @Date:		5/8/21
 ;* @Author:		Szyfr
 ;*/
 
@@ -40,28 +40,13 @@ draw_animated_sprite:
 	jmp		.update_rect
 
 .update_rect:
-	xor		rax,rax
-	mov		al,byte[r9+AnimatedSprite.curFrame]
-	imul	rax,4
-	mov		rbx,[r9+AnimatedSprite.curClip]
-	add		rbx,rax
-	mov		eax,[rbx]
-	mov		[r9+AnimatedSprite.rect.x],eax
+	mov		rcx,r9
+	call	update_rectangle
 
 .display_sprite:
 	;;DrawTextureRec(&PlayerData.spriteTexture,&PlayerData.spriteRect,{PlayerData.camera.target.x-64f,PlayerData.camera.target.y-64f},WHITE);
-	mov		rbx,[general_memory]
 	lea		rcx,[r9+AnimatedSprite.texture]
 	mov		r8,rdx
-;	mov		qword[rbx+GeneralMemory.qword],r8
-;	mov		dword[rbx+GeneralMemory.dword],64f
-;	fld		dword[rbx+GeneralMemory.qword]
-;	fsub	dword[rbx+GeneralMemory.dword]
-;	fstp	dword[rbx+GeneralMemory.qword]
-;	fld		dword[rbx+GeneralMemory.qword+4]
-;	fsub	dword[rbx+GeneralMemory.dword]
-;	fstp	dword[rbx+GeneralMemory.qword+4]
-;	mov		r8,qword[rbx+GeneralMemory.qword]
 	lea		rdx,[r9+AnimatedSprite.rect]
 	mov		r9d,WHITE
 	call	[DrawTextureRec]
@@ -77,13 +62,42 @@ draw_animated_sprite:
 change_animated_sprite:
 	sub 	rsp,28h
 
+.Init:
 	mov		r8,[animation_memory]
 	imul	rdx,8
 	add		r8,rdx
 	mov		rax,[r8]
+.check:
+	cmp		rax,[rcx+AnimatedSprite.curClip]
+	je		.exit
+.change:
 	mov		[rcx+AnimatedSprite.curClip],rax
 	mov		[rcx+AnimatedSprite.curFrame],0
+	mov		[rcx+AnimatedSprite.frameTime],16
 	mov		[rcx+AnimatedSprite.timer],0
+	call	update_rectangle
 
+.exit:
+	add		rsp,28h
+	ret
+
+
+;;=  void UpdateRectangle(AnimatedSprite:&sprite);
+;;=  RCX = &sprite		RDX = animation
+;;=  	Changes the current playing animation in the
+;;=		pointed to AnimatedSprite to the animation input.
+update_rectangle:
+	sub		rsp,28h
+
+.update:
+	xor		rax,rax
+	mov		al,byte[rcx+AnimatedSprite.curFrame]
+	imul	rax,4
+	mov		rbx,[rcx+AnimatedSprite.curClip]
+	add		rbx,rax
+	mov		eax,[rbx]
+	mov		[rcx+AnimatedSprite.rect.x],eax
+
+.exit:
 	add		rsp,28h
 	ret

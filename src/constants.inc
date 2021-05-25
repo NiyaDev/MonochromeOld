@@ -1,40 +1,30 @@
+;*/
+;* @Date:		5/4/21
+;* @Author:		Szyfr
+;*/
+
 
 ;;=  Program Constants
 CONST_windowWidth		equ 1080
 CONST_windowHeight		equ  720
+;* For Raylib camera offset
 CONST_windowWidthHalf	equ  508f	;476f	;540f
 CONST_windowHeightHalf	equ  328f	;296f	;360f
 
-CONST_anim_0	equ	0f
-CONST_anim_1	equ	64f
-CONST_anim_2	equ	128f
-CONST_anim_3	equ	192f
-CONST_anim_4	equ	256f
-CONST_anim_5	equ	320f
-CONST_anim_6	equ	384f
-CONST_anim_7	equ	448f
+;;=  Programming shortcuts
+input_1					equ rcx
+input_2					equ rdx
+input_3					equ r8
+input_4					equ r9
+input_5					equ dword [rsp+0x20]
+stack_variable_1		equ dword [rsp+0x20]
+
+
+walk_speed	equ	4f
+run_speed	equ	8f
 
 
 include 'constants/raylib.inc'
 include 'constants/sprite_data.inc'
 include 'constants/general_memory.inc'
 include 'constants/player_memory.inc'
-
-
-virtual at r10
-	tileName		db	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
-	tileCityname	db	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
-	tileCitylevel	db	?
-	tileTerrain		db	?
-	tileBuildings	db	?,?,?,?,?,?,?,?,?,?
-	tilePopulation	dq	?
-end virtual
-
-virtual at rdx
-	srctileName			db	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
-	srctileCityname		db	?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
-	srctileCitylevel	db	?
-	srctileTerrain		db	?
-	srctileBuildings	db	?,?,?,?,?,?,?,?,?,?
-	srctilePopulation	dq	?
-end virtual

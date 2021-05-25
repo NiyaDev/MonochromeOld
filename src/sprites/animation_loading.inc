@@ -4,9 +4,9 @@
 ;*/
 
 
-
+;;=  
 load_animations:
-	sub rsp,28h
+	sub		rsp,28h
 
 .load_raw_data:
 	;;animation_memory = LoadFileData(&animations_text,&qword);
@@ -67,5 +67,5 @@ load_animations:
 	jnz		.parse_start
 
 .exit:
-	add rsp,28h
+	add		rsp,28h
 	ret

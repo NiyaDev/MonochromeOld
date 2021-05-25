@@ -5,10 +5,57 @@
 
 
 
-;;=  void UpdateMovement(Vector2:tilePosition, Vector2:currentPosition);
+;;=  void UpdateMovement(Enitity*:entity);
+;;=		RCX = entity
 update_movement:
 	sub		rsp,28h
 
+	mov		rax,[rcx+Entity.worldPos]
+	cmp		rax,[rcx+Entity.tilePos]
+	je		.equal_exit
+	mov		[rcx+Entity.isMoving],1
+
+.determine_direction:
+	mov		ebx,[rcx+Entity.tilePos.y]
+	cmp		ebx,[rcx+Entity.worldPos.y]
+	jne		.move_y
+
+.move_x:
+	mov		ebx,[rcx+Entity.worldPos.x]
+	cmp		ebx,[rcx+Entity.tilePos.x]
+	jl		.move_positive
+	jmp		.move_negative
+.move_y:
+	add		rcx,4
+	mov		ebx,[rcx+Entity.worldPos.x]
+	cmp		ebx,[rcx+Entity.tilePos.x]
+	jl		.move_positive
+	jmp		.move_negative
+.move_positive:
+	mov		r8,[general_memory]
+	mov		[r8+GeneralMemory.dword],ebx
+	fld		dword[r8+GeneralMemory.dword]
+	mov		[r8+GeneralMemory.dword],walk_speed
+	fadd	[r8+GeneralMemory.dword]
+	fstp	[r8+GeneralMemory.dword]
+	mov		ebx,[r8+GeneralMemory.dword]
+	mov		[rcx+Entity.worldPos.x],ebx
+	jmp		.exit
+.move_negative:
+	mov		r8,[general_memory]
+	mov		[r8+GeneralMemory.dword],ebx
+	fld		dword[r8+GeneralMemory.dword]
+	mov		[r8+GeneralMemory.dword],walk_speed
+	fsub	[r8+GeneralMemory.dword]
+	fstp	[r8+GeneralMemory.dword]
+	mov		ebx,[r8+GeneralMemory.dword]
+	mov		[rcx+Entity.worldPos.x],ebx
+	jmp		.exit
+
+.equal_exit:
+	mov		[rcx+Entity.isMoving],0
+
+.exit:
 	add		rsp,28h
 	ret
 
