@@ -64,42 +64,42 @@ update_movement:
 move_direction:
 	sub		rsp,28h
 
-	mov		r8,[general_memory]
-	mov		[r8+GeneralMemory.v2],rcx
-	mov		[r8+GeneralMemory.dword],64f
+	mov		r9,[general_memory]
+	mov		[r9+GeneralMemory.v2],rcx
+	mov		[r9+GeneralMemory.dword],64f
 
-	cmp		rdx,0			;down
+	cmp		rdx,1			;down
 	jz		.move_down
-	cmp		rdx,1			;right
+	cmp		rdx,3			;right
 	jz		.move_right
-	cmp		rdx,2			;up
+	cmp		rdx,0			;up
 	jz		.move_up
-	cmp		rdx,3			;left
+	cmp		rdx,2			;left
 	jz		.move_left
 	jmp		.exit
 
 .move_down:					;down
-	fld		dword[r8+GeneralMemory.v2.y]
-	fadd	dword[r8+GeneralMemory.dword]
-	fstp	dword[r8+GeneralMemory.v2.y]
+	fld		dword[r9+GeneralMemory.v2.y]
+	fadd	dword[r9+GeneralMemory.dword]
+	fstp	dword[r9+GeneralMemory.v2.y]
 	jmp		.exit
 .move_right:				;right
-	fld		dword[r8+GeneralMemory.v2.x]
-	fadd	dword[r8+GeneralMemory.dword]
-	fstp	dword[r8+GeneralMemory.v2.x]
+	fld		dword[r9+GeneralMemory.v2.x]
+	fadd	dword[r9+GeneralMemory.dword]
+	fstp	dword[r9+GeneralMemory.v2.x]
 	jmp		.exit
 .move_up:					;up
-	fld		dword[r8+GeneralMemory.v2.y]
-	fsub	dword[r8+GeneralMemory.dword]
-	fstp	dword[r8+GeneralMemory.v2.y]
+	fld		dword[r9+GeneralMemory.v2.y]
+	fsub	dword[r9+GeneralMemory.dword]
+	fstp	dword[r9+GeneralMemory.v2.y]
 	jmp		.exit
 .move_left:					;left
-	fld		dword[r8+GeneralMemory.v2.x]
-	fsub	dword[r8+GeneralMemory.dword]
-	fstp	dword[r8+GeneralMemory.v2.x]
+	fld		dword[r9+GeneralMemory.v2.x]
+	fsub	dword[r9+GeneralMemory.dword]
+	fstp	dword[r9+GeneralMemory.v2.x]
 	jmp		.exit
 
 .exit:
-	mov		rax,[r8+GeneralMemory.v2]
+	mov		rax,[r9+GeneralMemory.v2]
 	add		rsp,28h
 	ret

@@ -68,12 +68,14 @@ program_init:
 	mov		dword [rax+PlayerData.entity.sprite.rect.height],64f
 
 .initialize_animation:
-	;;Sets initial animation
 	mov		r8,[player_memory]
 	mov		r9,[animation_memory]
 	mov		rbx,[r9+32]
 	mov		[r8+PlayerData.entity.sprite.frameTime],10h
 	mov		[r8+PlayerData.entity.sprite.curClip],rbx
+
+.initialize_player_data:
+	mov		[r8+PlayerData.ctrData.direction],0
 
 .setup_camera:
 	;;camera = {0,0,CONST_windowWidthHalf,CONST_windowHeightHalf,1f};
