@@ -49,7 +49,7 @@ draw_animated_sprite:
 	mov		r8,rdx
 	lea		rdx,[r9+AnimatedSprite.rect]
 	mov		r9d,WHITE
-	call	[DrawTextureRec]
+	call	qword[DrawTextureRec]
 
 	add		rsp,28h
 	ret

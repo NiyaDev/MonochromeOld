@@ -13,14 +13,14 @@ load_animations:
 	mov		rax,[general_memory]
 	lea		rcx,[animations_text]
 	lea		rdx,[rax+GeneralMemory.qword]
-	call 	[LoadFileData]
+	call 	qword[LoadFileData]
 	mov		[animation_memory],rax			;temp
 
 .allocate_new_memory:
 	mov		rax,[general_memory]
 	mov		rcx,[rax+GeneralMemory.qword]
 	imul	rcx,2
-	call	[MemAlloc]
+	call	qword[MemAlloc]
 
 .copy_file_data:
 	mov		rdx,[general_memory]			;Copy pointer to general_memory into rdx
@@ -39,7 +39,7 @@ load_animations:
 .fix_addresses:
 	mov		rcx,[animation_memory]
 	mov		[animation_memory],rax
-	call	[UnloadFileData]
+	call	qword[UnloadFileData]
 
 
 .parse_data_create_pointers:

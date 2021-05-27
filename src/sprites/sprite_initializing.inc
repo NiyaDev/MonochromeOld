@@ -17,7 +17,8 @@ import_sprite:
 	;;LoadTexture(&GeneralMemory.image,&filename);
 	mov rax,[general_memory]
 	lea rcx,[rax+GeneralMemory.image]
-	call [LoadImageRL]
+;	call [LoadImageRL]
+	call qword[LoadImageRL]
 
 	;;ImageResizeNN(&GeneralMemory.image,GeneralMemory.image.width*4,GeneralMemory.image.height*4);
 	mov rax,[general_memory]
@@ -26,18 +27,18 @@ import_sprite:
 	shl rdx,CONST_resizeFactor
 	mov r8d,[rax+GeneralMemory.image.height]
 	shl r8,CONST_resizeFactor
-	call [ImageResizeNN]
+	call qword[ImageResizeNN]
 
 	;;LoadTextureFromImage(&texture,&GeneralMemory.image);
 	mov rax,[general_memory]
 	mov rcx,qword[rax+GeneralMemory.qword]
 	lea rdx,[rax+GeneralMemory.image]
-	call [LoadTextureFromImage]
+	call qword[LoadTextureFromImage]
 
 	;;UnloadImage(&GeneralMemory.image);
 	mov rax,[general_memory]
 	lea rcx,[rax+GeneralMemory.image]
-	call [UnloadImage]
+	call qword[UnloadImage]
 
 	add rsp,$28
 	ret
