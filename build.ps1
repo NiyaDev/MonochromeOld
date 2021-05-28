@@ -47,40 +47,15 @@ if ($copyFiles -eq $TRUE) {
 	Copy-Item -Path ".\data" -Destination ".\$executableLocation" -Force -Recurse
 }
 
-#Moving libraries
-#if ($copyFiles -eq $TRUE) {
-#	Copy-Item -Path ".\lib\*" -Destination ".\$executableLocation" -Force -Recurse
-#}
-
 #Backing up src
 if ($copyFiles -eq $TRUE) {
 	Copy-Item -Path ".\src" -Destination ".\$executableLocation" -Force -Recurse
 }
 
 
-if ($linux -eq $TRUE) {
-	$executableExt = ".elf"
-} else {
-	$executableExt = ".exe"
-}
-
-
 #Setting up stopwatch
 $stopwatch =  [system.diagnostics.stopwatch]::StartNew()
 
-#Choosing specific compiler for extension
-#C/C++
-if ($fileExt -eq ".cpp" -or $fileExt -eq ".c") {
-	#Setting up variables for compilation
-	$src = "src\" + $mainFile + $fileExt
-	$exe = "-o" + $executableLocation + "\" + $executableName
-	$lib = "-lraylib -lgdi32 -lwinmm -user32".Split(" ")
-
-	#Compiling
-	"...Compiling Program..."
-	& "g++" $src $exe $lib
-}
-#Assembly
 if ($fileExt -eq ".asm") {
 	#Setting up variables for compilation
 	$src = "src\" + $mainFile + $fileExt

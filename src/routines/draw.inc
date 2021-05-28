@@ -30,7 +30,7 @@ draw:
 	mov		r8,200
 	mov		r9,100
 	mov		stack_variable_1,WHITE
-	call	qword DrawRectangle
+	call	DrawRectangle
 
 .draw_test_texture:
 	;;DrawTexture(&PlayerData.spriteTexture,300,300,WHITE);
@@ -39,7 +39,7 @@ draw:
 	mov 	rdx,300
 	mov 	r8,300
 	mov 	r9,WHITE
-	call	qword DrawTexture
+	call	DrawTexture
 
 .draw_player_sprite:
 ;	call draw_player
@@ -50,11 +50,11 @@ draw:
 
 .ender_render_camera:
 	;;EndMode2D()
-	call	qword EndMode2D
+	call	EndMode2D
 
 .end_draw::
 	;;EndDrawing()
-	call	qword EndDrawing
+	call	EndDrawing
 
 .exit:
 	add		rsp,$28

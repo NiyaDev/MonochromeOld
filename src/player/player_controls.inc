@@ -118,25 +118,25 @@ set_controls:
 
 .check_up:
 	mov		rcx,KEY_W
-	call	qword IsKeyDown
+	call	IsKeyDown
 	cmp		al,1
 	jne		.check_down
 	bts		[r8+PlayerData.ctrData.direction],0
 .check_down:
 	mov		rcx,KEY_S
-	call	qword IsKeyDown
+	call	IsKeyDown
 	cmp		al,1
 	jne		.check_left
 	bts		[r8+PlayerData.ctrData.direction],1
 .check_left:
 	mov		rcx,KEY_A
-	call	qword IsKeyDown
+	call	IsKeyDown
 	cmp		al,1
 	jne		.check_right
 	bts		[r8+PlayerData.ctrData.direction],2
 .check_right:
 	mov		rcx,KEY_D
-	call	qword IsKeyDown
+	call	IsKeyDown
 	cmp		al,1
 	jne		.exit
 	bts		[r8+PlayerData.ctrData.direction],3

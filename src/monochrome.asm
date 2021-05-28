@@ -18,29 +18,6 @@ section '.text' code readable executable
 ;*
 public start as 'WinMain'
 
-extrn 'WindowShouldClose' as WindowShouldClose
-extrn 'IsKeyDown' as IsKeyDown
-extrn 'BeginDrawing' as BeginDrawing
-extrn 'ClearBackground' as ClearBackground
-extrn 'BeginMode2D' as BeginMode2D
-extrn 'DrawRectangle' as DrawRectangle
-extrn 'DrawTexture' as DrawTexture
-extrn 'EndMode2D' as EndMode2D
-extrn 'EndDrawing' as EndDrawing
-extrn 'DrawTextureRec' as DrawTextureRec
-extrn 'InitWindow' as InitWindow
-extrn 'SetTargetFPS' as SetTargetFPS
-extrn 'MemAlloc' as MemAlloc
-extrn 'LoadImage' as LoadImageRL
-extrn 'UnloadImage' as UnloadImage
-extrn 'LoadTextureFromImage' as LoadTextureFromImage
-extrn 'ImageResizeNN' as ImageResizeNN
-extrn 'SetWindowIcon' as SetWindowIcon
-extrn 'LoadFileData' as LoadFileData
-extrn 'UnloadFileData' as UnloadFileData
-extrn 'MemFree' as MemFree
-extrn 'CloseWindow' as CloseWindowRL
-
 start:
 	; Make stack dqword aligned
 	sub	rsp,8
@@ -57,7 +34,7 @@ start:
 	call draw
 	
 	;;While (!WindowShouldClose())
-	call qword WindowShouldClose
+	call WindowShouldClose
 	cmp rax,1
 	jnz .loop
 
@@ -76,4 +53,4 @@ include 'utilities/program_exit.inc'
 
 
 include 'data.inc'
-;include 'idata.inc'
+include 'imports.inc'

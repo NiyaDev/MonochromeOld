@@ -10,16 +10,16 @@ program_exit:
 .free_memory_allocations:
 	;;MemFree(&general_memory)
 	mov		rcx,[general_memory]
-	call	qword MemFree
+	call	MemFree
 	;;MemFree(&player_memory)
 	mov		rcx,[player_memory]
-	call	qword MemFree
+	call	MemFree
 	;;MemFree(&animation_memory)
 	mov		rcx,[animation_memory]
-	call	qword MemFree
+	call	MemFree
 	
 	;;CloseWindowRL()
-	call qword CloseWindowRL
+	call	CloseWindowRL
 
 	add		rsp,28h
 	ret
