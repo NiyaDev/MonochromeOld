@@ -48,9 +48,9 @@ if ($copyFiles -eq $TRUE) {
 }
 
 #Moving libraries
-if ($copyFiles -eq $TRUE) {
-	Copy-Item -Path ".\lib\*" -Destination ".\$executableLocation" -Force -Recurse
-}
+#if ($copyFiles -eq $TRUE) {
+#	Copy-Item -Path ".\lib\*" -Destination ".\$executableLocation" -Force -Recurse
+#}
 
 #Backing up src
 if ($copyFiles -eq $TRUE) {
@@ -84,11 +84,13 @@ if ($fileExt -eq ".cpp" -or $fileExt -eq ".c") {
 if ($fileExt -eq ".asm") {
 	#Setting up variables for compilation
 	$src = "src\" + $mainFile + $fileExt
-	$exe = "" + $executableLocation + "\" + $executableName + $executableExt
+	$exe = "" + $executableLocation + "\" + $executableName
+	$lib = "-Wall -lraylib -lm -lgcc -lpthread -lgdi32 -lwinmm -mwindows".Split(" ")
 
 	#Compiling
 	"...Compiling Program..."
-	& "fasm" $src $exe
+	& "fasm" $src $exe".o"
+	& "gcc" $exe".o" $lib "-o"$exe".exe"
 }
 
 #Stopping the stopwatch

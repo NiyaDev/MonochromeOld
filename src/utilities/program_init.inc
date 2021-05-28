@@ -13,15 +13,15 @@ program_init:
 	mov		ecx,CONST_windowWidth
 	mov		edx,CONST_windowHeight
 	lea		r8,[title]
-	call	qword[InitWindow]
+	call	qword InitWindow
 	;;SetTargetFPS(60)
 	mov		ecx,60
-	call	qword[SetTargetFPS]
+	call	qword SetTargetFPS
 
 .allocate_general_memory:
 	;;general_memory = MemAlloc(CONST_memorySize)
 	mov		rcx,CONST_memorySize
-	call	qword[MemAlloc]
+	call	qword MemAlloc
 	mov		[general_memory],rax
 	;;CleanMemory(&general_memory,CONST_memorySize)
 	mov		rcx,[general_memory]
@@ -30,7 +30,7 @@ program_init:
 .allocate_player_memory:
 	;;player_memory = MemAlloc(CONST_memorySize);
 	mov		rcx,CONST_memorySize
-	call	qword[MemAlloc]
+	call	qword MemAlloc
 	mov		[player_memory],rax
 	;;CleanMemory(&player_memory,CONST_memorySize);
 	mov		rcx,[player_memory]
@@ -45,13 +45,13 @@ program_init:
 	lea		rcx,[rax+GeneralMemory.image]
 	lea		rdx,[icon_text]
 ;	call	qword[LoadImageRL]
-	call	qword[LoadImageRL]
+	call	qword LoadImageRL
 	mov		rax,[general_memory]
 	lea		rcx,[rax+GeneralMemory.image]
-	call	qword[SetWindowIcon]
+	call	qword SetWindowIcon
 	mov		rax,[general_memory]
 	lea		rcx,[rax+GeneralMemory.image]
-	call	qword[UnloadImage]
+	call	qword UnloadImage
 
 .initialize_player_sprites:
 	;;ImportSprite(&player_overworld_m_text,&PlayerData.spriteTexture)

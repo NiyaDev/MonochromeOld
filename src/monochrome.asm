@@ -4,13 +4,43 @@ include 'constants.inc'
 
 
 ;;=  Windows
-format PE64 NX GUI 6.0
-section '.text' code readable executable
+format MS64 COFF
 ;;=  Linux
 ;format ELF64 executable 3
-;segment readable executable
 
-entry start
+section '.text' code readable executable
+
+;*
+;*	Don't know if these are important yet
+;*;entry start
+;*;public Main
+;*;public start as '_start'
+;*
+public start as 'WinMain'
+
+extrn 'WindowShouldClose' as WindowShouldClose
+extrn 'IsKeyDown' as IsKeyDown
+extrn 'BeginDrawing' as BeginDrawing
+extrn 'ClearBackground' as ClearBackground
+extrn 'BeginMode2D' as BeginMode2D
+extrn 'DrawRectangle' as DrawRectangle
+extrn 'DrawTexture' as DrawTexture
+extrn 'EndMode2D' as EndMode2D
+extrn 'EndDrawing' as EndDrawing
+extrn 'DrawTextureRec' as DrawTextureRec
+extrn 'InitWindow' as InitWindow
+extrn 'SetTargetFPS' as SetTargetFPS
+extrn 'MemAlloc' as MemAlloc
+extrn 'LoadImage' as LoadImageRL
+extrn 'UnloadImage' as UnloadImage
+extrn 'LoadTextureFromImage' as LoadTextureFromImage
+extrn 'ImageResizeNN' as ImageResizeNN
+extrn 'SetWindowIcon' as SetWindowIcon
+extrn 'LoadFileData' as LoadFileData
+extrn 'UnloadFileData' as UnloadFileData
+extrn 'MemFree' as MemFree
+extrn 'CloseWindow' as CloseWindowRL
+
 start:
 	; Make stack dqword aligned
 	sub	rsp,8
@@ -27,7 +57,7 @@ start:
 	call draw
 	
 	;;While (!WindowShouldClose())
-	call [WindowShouldClose]
+	call qword WindowShouldClose
 	cmp rax,1
 	jnz .loop
 
@@ -46,4 +76,4 @@ include 'utilities/program_exit.inc'
 
 
 include 'data.inc'
-include 'idata.inc'
+;include 'idata.inc'

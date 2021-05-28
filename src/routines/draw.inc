@@ -11,18 +11,18 @@ draw:
 
 .begin_draw:
 	;;BeginDrawing()
-	call	qword[BeginDrawing]
+	call	qword BeginDrawing
 
 .clear_background:
 	;;ClearBackground(RAYWHITE)
 	mov		ecx,RAYWHITE
-	call	qword[ClearBackground]
+	call	qword ClearBackground
 
 .render_camera:
 	;;BeginMode2D(&camera);
 	mov		rax,[player_memory]
 	lea		rcx,[rax+PlayerData.camera]
-	call	qword[BeginMode2D]
+	call	qword BeginMode2D
 
 	;;DrawRectangle(-100,100,200,100,WHITE);
 	mov		rcx,-100
@@ -30,7 +30,7 @@ draw:
 	mov		r8,200
 	mov		r9,100
 	mov		stack_variable_1,WHITE
-	call	qword[DrawRectangle]
+	call	qword DrawRectangle
 
 .draw_test_texture:
 	;;DrawTexture(&PlayerData.spriteTexture,300,300,WHITE);
@@ -39,7 +39,7 @@ draw:
 	mov 	rdx,300
 	mov 	r8,300
 	mov 	r9,WHITE
-	call	qword[DrawTexture]
+	call	qword DrawTexture
 
 .draw_player_sprite:
 ;	call draw_player
@@ -50,11 +50,11 @@ draw:
 
 .ender_render_camera:
 	;;EndMode2D()
-	call	qword[EndMode2D]
+	call	qword EndMode2D
 
 .end_draw::
 	;;EndDrawing()
-	call	qword[EndDrawing]
+	call	qword EndDrawing
 
 .exit:
 	add		rsp,$28
