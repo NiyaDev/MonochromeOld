@@ -65,6 +65,7 @@ if ($fileExt -eq ".asm") {
 	#Compiling
 	"...Compiling Program..."
 	& "fasm" $src $exe".o"
+	if ($LASTEXITCODE -ne 0) { break }
 	& "gcc" $exe".o" $lib "-o"$exe".exe"
 }
 

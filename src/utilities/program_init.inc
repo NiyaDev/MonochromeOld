@@ -9,33 +9,22 @@ program_init:
 	sub		rsp,$28
 
 .initialize_window:
-	;;InitWindow(WINDOW_WIDTH,WINDOW_HEIGHT,*title)
 	mov		ecx,CONST_windowWidth
 	mov		edx,CONST_windowHeight
 	lea		r8,[title]
 	call	InitWindow
-	;;SetTargetFPS(60)
+.set_fps:
 	mov		ecx,60
 	call	SetTargetFPS
 
 .allocate_general_memory:
-	;;general_memory = MemAlloc(CONST_memorySize)
 	mov		rcx,CONST_memorySize
-	call	MemAlloc
+	call	allocate_memory
 	mov		[general_memory],rax
-	;;CleanMemory(&general_memory,CONST_memorySize)
-	mov		rcx,[general_memory]
-	mov		rdx,CONST_memorySize
-	call	CleanMemory
 .allocate_player_memory:
-	;;player_memory = MemAlloc(CONST_memorySize);
 	mov		rcx,CONST_memorySize
-	call	MemAlloc
+	call	allocate_memory
 	mov		[player_memory],rax
-	;;CleanMemory(&player_memory,CONST_memorySize);
-	mov		rcx,[player_memory]
-	mov		rdx,CONST_memorySize
-	call	CleanMemory
 .allocate_animation_memory:
 	call	load_animations
 
@@ -60,6 +49,11 @@ program_init:
 	lea		rdx,[rax+PlayerData.entity.sprite.texture]
 	call	import_sprite
 
+.initialize_player_data:
+;;TODO: Keep this up-to-date.
+	mov		r8,[player_memory]
+	mov		r9,[animation_memory]
+;	mov		[r8+PlayerData.entity.sprite.]
 .initialize_sprite_rectangle:
 	;;PlayerData.spriteRect = {0,0,64f,64f};
 	mov		rax,[player_memory]
@@ -75,7 +69,7 @@ program_init:
 	mov		[r8+PlayerData.entity.sprite.frameTime],10h
 	mov		[r8+PlayerData.entity.sprite.curClip],rbx
 
-.initialize_player_data:
+;.initialize_player_data:
 	mov		[r8+PlayerData.ctrData.direction],0
 
 .setup_camera:
@@ -92,6 +86,6 @@ program_init:
 	ret
 
 
-include 'clean_memory.inc'
+include 'memory.inc'
 include '../sprites/sprite_initializing.inc'
 include '../sprites/animation_loading.inc'

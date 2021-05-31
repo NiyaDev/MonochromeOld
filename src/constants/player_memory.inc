@@ -4,6 +4,7 @@
 ;*/
 
 
+;;=  Structures
 struc ControlData {
 	.direction		dw		0
 	.action			dw		0
@@ -18,8 +19,6 @@ struc KeyBindings {
 	.start			db		0
 	.select			db		0
 }
-
-
 struc PlayerData {
 	.entity			Entity			;64-bytes
 	.camera			Camera2D		;34-bytes
@@ -27,6 +26,7 @@ struc PlayerData {
 	.ctrBindings	KeyBindings		; 8-bytes
 }	;110-bytes
 
+;;=  Macros
 virtual at 0
 	PlayerData	PlayerData
 	sizeof.PlayerData = $ - PlayerData
