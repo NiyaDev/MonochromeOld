@@ -29,7 +29,7 @@ draw:
 	mov		rdx,100
 	mov		r8,200
 	mov		r9,100
-	mov		stack_variable_1,WHITE
+	mov		input_5,WHITE
 	call	DrawRectangle
 
 .draw_test_texture:

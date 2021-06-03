@@ -8,50 +8,31 @@
 ;;=  Loads animations from file and stores a pointer to them
 ;;=		Input:		N/A
 ;;=		Output:		N/A
-;;=		Destroys:	RAX,RCX,RDX
-;;TODO:Finish cleaning this up
+LDA_output			equ		rax
 load_animations:
-	sub		rsp,28h
+	sub		rsp,	28h
 
 	push	rax
 	push	rcx
 	push	rdx
 
-	lea		rcx,[animations_text]
-	mov		rdx,1
+.load_file:
+	lea		LDF_filename,		[animations_text]
+	mov		LDF_outputFormat,	1
 	call	load_file_data
-	mov		[animation_memory],rax
-
-
-.parse_data_create_pointers:
-	mov		r8,[animation_memory]
-	mov		r9,[animation_memory]
-	mov		rcx,[r8]
-	add		r9,rcx
-	mov		[r8],r9
-	add		r8,8
-.parse_start:
-	mov		eax,[r9]
-	cmp		eax,0xFFFFFFFF
-	je		.create_pointer
-	add		r9,4
-	sub		rcx,4
-	jnz		.parse_start
-	jmp		.exit
-
-.create_pointer:
-	add		r9,4
-	mov		[r8],r9
-	add		r8,8
-	sub		rcx,4
-	jnz		.parse_start
+	mov		[animation_memory],	LDA_output
+.create_toc:
+	mov		PRS_dataPtr,		LDA_output
+	mov		PRS_dataSize,		4
+	mov		PRS_buffer_32,		0xFFFFFFFF
+	call	parse_file_data
 
 .exit:
 	pop		rax
 	pop		rcx
 	pop		rdx
 
-	add		rsp,28h
+	add		rsp,	28h
 	ret
 
 

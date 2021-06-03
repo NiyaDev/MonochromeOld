@@ -12,12 +12,12 @@ CONST_windowWidthHalf	equ  508f	;476f	;540f
 CONST_windowHeightHalf	equ  328f	;296f	;360f
 
 ;;=  Programming shortcuts
+output					equ	rax
 input_1					equ rcx
 input_2					equ rdx
 input_3					equ r8
 input_4					equ r9
 input_5					equ dword [rsp+0x20]
-stack_variable_1		equ dword [rsp+0x20]
 
 
 walk_speed	equ	4f
