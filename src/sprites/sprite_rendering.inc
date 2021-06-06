@@ -4,27 +4,38 @@
 ;*/
 
 
-;;=  DrawAnimatedSprite(AnimatedSprite:&sprite, Vector2:position);
-;;=  RCX = &sprite		RDX = positon
-;;=  	Draws the current frame in the pointed to AnimatedSprite
-;;=		in the world at the input postion.
+;;=  Draws the current frame in the pointed to AnimatedSprite at the input position
+;;=  	Input:		RCX = &sprite
+;;=					RDX = positon
+DAS_sprite			equ		rcx
+DAS_position		equ		rdx
+
+DAS_generalMemPtr	equ		r8
+DAS_spritePtr		equ		r9
+DAS_spriteFrameTime	equ		r9+AnimatedSprite.frameTime
+DAS_spriteTimer		equ		r9+AnimatedSprite.timer
+
+DAS_timing			equ		r10
+DAS_timingByte		equ		r10b
+DAS_timingWord		equ		r10w
 draw_animated_sprite:
-	sub		rsp,28h
+	sub		rsp,	28h
 
-	mov		r8,[general_memory]
-	mov		r9,rcx
+	mov		DAS_generalMemPtr,		[general_memory]
+	mov		DAS_spritePtr,			DAS_sprite
+	xor		DAS_timing,				DAS_timing
 
-	xor		r10,r10
-	mov		r10b,[r9+AnimatedSprite.frameTime]
+	mov		DAS_timingByte,			[DAS_spriteFrameTime]
 
-	inc		[r9+AnimatedSprite.timer]
-	cmp		[r9+AnimatedSprite.timer],r10w
+	inc		[DAS_spriteTimer]
+	cmp		[DAS_spriteTimer],		DAS_timingWord
 	jge		.change_sprite
 	jmp		.display_sprite
 
 .change_sprite:
-	mov		[r9+AnimatedSprite.timer],0
+	mov		[DAS_spriteTimer],		0
 	xor		rax,rax
+
 	mov		al,byte[r9+AnimatedSprite.curFrame]
 	imul	rax,4
 	mov		rbx,[r9+AnimatedSprite.curClip]
@@ -59,22 +70,32 @@ draw_animated_sprite:
 ;;=  RCX = &sprite		RDX = animation
 ;;=  	Changes the current playing animation in the
 ;;=		pointed to AnimatedSprite to the animation input.
+CAS_spritePtr		equ		rcx
+CAS_animation		equ		rdx
+
+CAS_spriteClip		equ		rcx+AnimatedSprite.curClip
+CAS_spriteFrame		equ		rcx+AnimatedSprite.curFrame
+CAS_spriteFrameTime	equ		rcx+AnimatedSprite.frameTime
+CAS_spriteTimer		equ		rcx+AnimatedSprite.timer
+
+CAS_animationMem	equ		r8
+CAS_animationPtr	equ		rax
 change_animated_sprite:
-	sub 	rsp,28h
+	sub 	rsp,	28h
 
 .Init:
-	mov		r8,[animation_memory]
-	imul	rdx,8
-	add		r8,rdx
-	mov		rax,[r8]
+	mov		CAS_animationMem,		[animation_memory]
+	imul	CAS_animation,			8
+	add		CAS_animationMem,		CAS_animation
+	mov		CAS_animationPtr,		[CAS_animationMem]
 .check:
-	cmp		rax,[rcx+AnimatedSprite.curClip]
+	cmp		CAS_animationPtr,		[CAS_spriteClip]
 	je		.exit
 .change:
-	mov		[rcx+AnimatedSprite.curClip],rax
-	mov		[rcx+AnimatedSprite.curFrame],0
-	mov		[rcx+AnimatedSprite.frameTime],16
-	mov		[rcx+AnimatedSprite.timer],0
+	mov		[CAS_spriteClip],		CAS_animationPtr
+	mov		[CAS_spriteFrame],		0
+	mov		[CAS_spriteFrameTime],	16
+	mov		[CAS_spriteTimer],		0
 	call	update_rectangle
 
 .exit:

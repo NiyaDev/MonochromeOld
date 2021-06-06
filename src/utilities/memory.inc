@@ -7,19 +7,25 @@
 ;;=  Creates a memory heap and cleans it
 ;;=		Input:		RCX = size
 ;;=		Output:		RAX = &memoryAddress
+ALM_memorySize		equ		rcx
+ALM_memoryAddress	equ		rax
+ALM_memorySizeAlt	equ		rdx
+ALM_memoryPointer	equ		rcx
 allocate_memory:
-	sub		rsp,28h
-.allocate:
+	sub		rsp,	28h
+
 	push	rdx
-	push	rcx
+
+.allocate:
+	push	ALM_memorySize
 	call	MemAlloc
 .clean:
-	pop		rdx
-	mov		rcx,rax
+	pop		ALM_memorySizeAlt
+	mov		ALM_memoryPointer,		ALM_memoryAddress
 	call	clean_memory
 .exit:
 	pop		rdx
-	add		rsp,28h
+	add		rsp,	28h
 	ret
 
 
@@ -27,18 +33,26 @@ allocate_memory:
 ;;=		Input:		RCX = &memoryLocation
 ;;=					RDX = size
 ;;=		Output:		N/A
+CLM_memoryLocation	equ		rcx
+CLM_heapSize		equ		rdx
+CLM_counter			equ		rbx
 clean_memory:
-	push	rbx
-	xor		rbx,rbx
-.loop:
-	mov		byte[rcx],$0
-	inc		rcx
-	inc		rbx
+	sub		rsp,	28h
 
-	cmp		rbx,rdx
+	push	rbx
+	xor		CLM_counter,CLM_counter
+
+.loop:
+	mov		byte[CLM_memoryLocation],$0
+	inc		CLM_memoryLocation
+	inc		CLM_counter
+
+	cmp		CLM_counter,CLM_heapSize
 	jnz		.loop
 
+.exit:
 	pop		rbx
+	add		rsp,	28h
 	ret
 
 
@@ -48,6 +62,7 @@ clean_memory:
 ;;=					RDX = outputFormat
 ;;=						0:Regular	1:Double-sized and in later half
 ;;=		Output:		RAX = &data
+;;? Look back at this in a little to see if this is still good.
 LDF_output			equ		rax
 LDF_oldPtr			equ		rax
 LDF_filename		equ		rcx
@@ -58,6 +73,11 @@ LDF_firstAllocSize	equ		rdx
 LDF_secondAllocSize	equ		rcx
 
 LDF_fileDataPtr		equ		rdx+60
+
+LDF_byteCounter		equ		rcx
+LDF_oldPtrL			equ		r8
+LDF_newPtrL			equ		r9
+LDF_copiedDword		equ		r10d
 load_file_data:
 	sub		rsp,	28h
 
@@ -82,17 +102,17 @@ load_file_data:
 
 .copy_init:
 	mov		LDF_generalMemory,		[general_memory]
-	mov		rcx,					[LDF_generalMemory]
-	mov		r8,						[LDF_fileDataPtr]
-	mov		r9,						rax
-	add		r9,						rcx
+	mov		LDF_byteCounter,		[LDF_generalMemory]
+	mov		LDF_oldPtrL,			[LDF_fileDataPtr]
+	mov		LDF_newPtrL,			LDF_output
+	add		LDF_newPtrL,			LDF_byteCounter
 
 .copy_loop:
-	mov		r10d,					[r8]
-	mov		[r9],					r10d
-	add		r8,						4
-	add		r9,						4
-	sub		rcx,					4
+	mov		LDF_copiedDword,		[LDF_oldPtrL]
+	mov		[LDF_newPtrL],			LDF_copiedDword
+	add		LDF_oldPtrL,			4
+	add		LDF_newPtrL,			4
+	sub		LDF_byteCounter,		4
 	jnz		.copy_loop
 
 .remove_old_pointer:

@@ -17,23 +17,22 @@ public start as 'WinMain'
 
 
 start:
-	; Make stack dqword aligned
-	sub	rsp,8
-	sub rsp,$100
+	sub	rsp,	8
+	sub rsp,	$100
 
 .init:
-	call program_init
+	call	program_init
 
 .loop:
-	call update
-	call draw
+	call	update
+	call	draw
 	
-	call WindowShouldClose
-	cmp rax,1
-	jnz .loop
+	call	WindowShouldClose
+	cmp		rax,				1
+	jnz		.loop
 
 .exit:
-	call program_exit
+	call	program_exit
 	
 	ret
 

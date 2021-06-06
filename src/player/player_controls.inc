@@ -4,9 +4,29 @@
 ;*/
 
 
-;;=  void UpdatePlayer();
+;;=  Updates overworld player's movement and sprite
+;;=		INPUT:		N/A
+;;=		Output:		N/A
+UOP_control			equ		rcx
+UOP_pollResult		equ		al
+
+UOP_playerMem		equ		r8
+UOP_playerIsMoving	equ		r8+PlayerData.entity.isMoving
+UOP_playerDirection	equ		r8+PlayerData.entity.direction
+UOP_playerTilePos	equ		r8+PlayerData.entity.tilePos
+UOP_playerWorldPos	equ		r8+PlayerData.entity.worldPos
+UOP_playerSprite	equ		r8+PlayerData.entity.sprite
+
+UOP_isMoving		equ		al
+UOP_currentTile		equ		rcx
+UOP_moveDirOut		equ		rax
+UOP_changeSprite	equ		rcx
+
+;;TODO: Fix this?
+UOP_animation		equ		r10
+UOP_playAnimation	equ		rdx
 update_player:
-	sub		rsp,28h
+	sub		rsp,	28h
 
 	xor		rdx,rdx
 
@@ -14,89 +34,107 @@ update_player:
 	call	set_controls
 
 .poll_up:
-	mov		rcx,0
+	mov		UOP_control,			0
 	call	poll_controls
-	cmp		al,1
+	cmp		UOP_pollResult,			1
 	je		.tap_up
-	cmp		al,2
+
+	cmp		UOP_pollResult,			2
 	je		.hold_up
 .poll_down:
-	mov		rcx,1
+	mov		UOP_control,			1
 	call	poll_controls
-	cmp		al,1
+	cmp		UOP_pollResult,			1
 	je		.tap_down
-	cmp		al,2
+
+	cmp		UOP_pollResult,			2
 	je		.hold_down
 .poll_left:
-	mov		rcx,2
+	mov		UOP_control,			2
 	call	poll_controls
-	cmp		al,1
+	cmp		UOP_pollResult,			1
 	je		.tap_left
-	cmp		al,2
+
+	cmp		UOP_pollResult,			2
 	je		.hold_left
 .poll_right:
-	mov		rcx,3
+	mov		UOP_control,			3
 	call	poll_controls
-	cmp		al,1
+	cmp		UOP_pollResult,			1
 	je		.tap_right
-	cmp		al,2
+
+	cmp		UOP_pollResult,			2
 	je		.hold_right
 .no_controls_pressed:
 	jmp		.exit
 
 
 .hold_up:
-	mov		r8,[player_memory]
-	mov		[r8+PlayerData.entity.isMoving],1
-	mov		r10,0
+	mov		UOP_playerMem,			[player_memory]
+	mov		[UOP_playerIsMoving],	1
+	mov		[UOP_playerDirection],	1
+	mov		UOP_animation,			5
+	jmp		.player_movement
 .tap_up:
-	mov		[r8+PlayerData.entity.direction],2
-	add		r10,4
+	mov		UOP_playerMem,			[player_memory]
+	mov		[UOP_playerDirection],	1
+	mov		UOP_animation,			1
 	jmp		.player_movement
 
 .hold_down:
-	mov		r8,[player_memory]
-	mov		[r8+PlayerData.entity.isMoving],1
-	mov		r10,1
+	mov		UOP_playerMem,			[player_memory]
+	mov		[UOP_playerIsMoving],	1
+	mov		[UOP_playerDirection],	0
+	mov		UOP_animation,			4
+	jmp		.player_movement
 .tap_down:
-	mov		[r8+PlayerData.entity.direction],0
-	add		r10,4
+	mov		UOP_playerMem,			[player_memory]
+	mov		[UOP_playerDirection],	0
+	mov		UOP_animation,			0
 	jmp		.player_movement
 
 .hold_left:
-	mov		r8,[player_memory]
-	mov		[r8+PlayerData.entity.isMoving],1
-	mov		r10,2
+	mov		UOP_playerMem,			[player_memory]
+	mov		[UOP_playerIsMoving],	1
+	mov		[UOP_playerDirection],	2
+	mov		UOP_animation,			6
+	jmp		.player_movement
 .tap_left:
-	mov		[r8+PlayerData.entity.direction],3
-	add		r10,4
+	mov		UOP_playerMem,			[player_memory]
+	mov		[UOP_playerDirection],	2
+	mov		UOP_animation,			2
 	jmp		.player_movement
 
 .hold_right:
-	mov		r8,[player_memory]
-	mov		[r8+PlayerData.entity.isMoving],1
-	mov		r10,3
+	mov		UOP_playerMem,			[player_memory]
+	mov		[UOP_playerIsMoving],	1
+	mov		[UOP_playerDirection],	3
+	mov		UOP_animation,			7
+	jmp		.player_movement
 .tap_right:
-	mov		[r8+PlayerData.entity.direction],1
-	add		r10,4
+	mov		UOP_playerMem,			[player_memory]
+	mov		[UOP_playerDirection],	3
+	mov		UOP_animation,			3
 	jmp		.player_movement
 
 
 .player_movement:
-	mov		r8,[player_memory]
-	mov		al,[r8+PlayerData.entity.isMoving]
-	cmp		al,0
-	jne		.animation
+	mov		UOP_playerMem,			[player_memory]		;;? Might not need
+	cmp		[UOP_playerIsMoving],	0
+	je		.animation
 
-	mov		rcx,[r8+PlayerData.entity.tilePos]
-	mov		rdx,r10
-	sub		rdx,4
+	mov		UOP_currentTile,		[UOP_playerTilePos]
+	cmp		[UOP_playerWorldPos],	UOP_currentTile
+	jne		.exit
+
+	mov		UOP_playAnimation,		UOP_animation
+	sub		UOP_playAnimation,		4
 	call	move_direction
-	mov		[r8+PlayerData.entity.tilePos],rax
+	mov		[UOP_playerTilePos],	UOP_moveDirOut
 
 .animation:
-	lea		rcx,[r8+PlayerData.entity.sprite]
-	mov		rdx,r10
+	lea		UOP_changeSprite,		[UOP_playerSprite]
+	mov		UOP_playAnimation,		UOP_animation
 	call	change_animated_sprite
 
 .exit:
@@ -104,68 +142,102 @@ update_player:
 	ret
 
 
-;;=  void SetControls();
+;;=  Gathers currently pressed keys and stores them
+;;=		INPUT:		N/A
+;;=		Output:		N/A
+;;TODO:	set up keybindings
+SCN_playerMemory	equ		r8
+
+SCN_playerDir		equ		cx
+SCN_playerDirKeys	equ		r8+PlayerData.ctrData.direction
+SCN_playerActKeys	equ		r8+PlayerData.ctrData.action
+SCN_keycode			equ		rcx
+SCN_keyOutput		equ		al
 set_controls:
-	sub		rsp,28h
+	sub		rsp,	28h
+
+	push	rcx
+	push	r8
 
 .initialize:
 	xor		rax,rax
-	mov		r8,[player_memory]
+	mov		SCN_playerMemory,		[player_memory]
 .shift_last_bits:
-	mov		cx,[r8+PlayerData.ctrData.direction]
-	shl		cx,4
-	mov		[r8+PlayerData.ctrData.direction],cx
+	mov		SCN_playerDir,			[SCN_playerDirKeys]
+	shl		SCN_playerDir,			4
+	mov		[SCN_playerDirKeys],	SCN_playerDir
 
 .check_up:
-	mov		rcx,KEY_W
+	mov		SCN_keycode,			KEY_W
 	call	IsKeyDown
-	cmp		al,1
+	cmp		SCN_keyOutput,			1
 	jne		.check_down
-	bts		[r8+PlayerData.ctrData.direction],0
+	bts		[SCN_playerDirKeys],	0
 .check_down:
-	mov		rcx,KEY_S
+	mov		SCN_keycode,			KEY_S
 	call	IsKeyDown
-	cmp		al,1
+	cmp		SCN_keyOutput,			1
 	jne		.check_left
-	bts		[r8+PlayerData.ctrData.direction],1
+	bts		[SCN_playerDirKeys],	1
 .check_left:
-	mov		rcx,KEY_A
+	mov		SCN_keycode,			KEY_A
 	call	IsKeyDown
-	cmp		al,1
+	cmp		SCN_keyOutput,			1
 	jne		.check_right
-	bts		[r8+PlayerData.ctrData.direction],2
+	bts		[SCN_playerDirKeys],	2
 .check_right:
-	mov		rcx,KEY_D
+	mov		SCN_keycode,			KEY_D
 	call	IsKeyDown
-	cmp		al,1
+	cmp		SCN_keyOutput,			1
 	jne		.exit
-	bts		[r8+PlayerData.ctrData.direction],3
-	
+	bts		[SCN_playerDirKeys],	3
+
+;;TODO: Scan for action keys as well
+
 .exit:
-	add		rsp,28h
+	pop		rcx
+	pop		r8
+
+	add		rsp,	28h
 	ret
 
 
-;;=  byte PollControls(byte:control);
-;;=		RCX =	0:Up		1:Down		2:Left		3:Right
-;;?				4:Confirm	5:Cancel	6:Start		7:Select
-;;=		RAX = 0:None	1:Tap		2:Hold
+;;=  Polls currently stored controls
+;;=		INPUT:		RCX = control
+;;=						0:Up		1:Down		2:Left		3:Right
+;;=						4:Confirm	5:Cancel	6:Start		7:Select
+;;=		Output:		RAX = buttonData
+;;=						0:None		1:Tap		2:Hold
+PCN_control			equ		rcx
+PCN_output			equ		rax
+PCN_outputDword		equ		ax
+
+PCN_controlHigh		equ		ch
+PCN_controlDword	equ		cx
+PCN_playerMemory	equ		r8
+PCN_playerDirKeys	equ		r8+PlayerData.ctrData.direction
+PCN_playerActKeys	equ		r8+PlayerData.ctrData.action
 poll_controls:
-	sub		rsp,28h
+	sub		rsp,	28h
 
 .initialize:
-	xor		rax,rax
-	xor		ch,ch
-	mov		r8,[player_memory]
+	xor		PCN_output,				PCN_output
+	xor		PCN_controlHigh,		PCN_controlHigh
+	mov		PCN_playerMemory,		[player_memory]
+
+;;TODO: Test if the control byte is greater than 3,
+;;TODO: If so, poll in action, rather than direction
 
 .poll:
-	bt		[r8+PlayerData.ctrData.direction],cx
+	bt		[PCN_playerDirKeys],	PCN_controlDword
 	jnc		.exit
-	add		ax,1
-	add		cx,12
-	bt		[r8+PlayerData.ctrData.direction],cx
+
+	add		PCN_outputDword,		1
+	add		PCN_controlDword,		12
+	bt		[PCN_playerDirKeys],	PCN_controlDword
 	jnc		.exit
-	add		ax,1
+
+	add		PCN_outputDword,		1
 
 .exit:
 	add		rsp,28h

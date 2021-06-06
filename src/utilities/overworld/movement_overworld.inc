@@ -68,11 +68,11 @@ move_direction:
 	mov		[r9+GeneralMemory.v2],rcx
 	mov		[r9+GeneralMemory.dword],64f
 
-	cmp		rdx,1			;down
+	cmp		rdx,0			;down
 	jz		.move_down
 	cmp		rdx,3			;right
 	jz		.move_right
-	cmp		rdx,0			;up
+	cmp		rdx,1			;up
 	jz		.move_up
 	cmp		rdx,2			;left
 	jz		.move_left
