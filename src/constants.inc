@@ -5,11 +5,11 @@
 
 
 ;;=  Program Constants
-CONST_windowWidth		equ 1080
-CONST_windowHeight		equ  720
+CONST_windowWidth		equ 640;1080
+CONST_windowHeight		equ 576; 720
 ;* For Raylib camera offset
-CONST_windowWidthHalf	equ  508f	;476f	;540f
-CONST_windowHeightHalf	equ  328f	;296f	;360f
+CONST_windowWidthHalf	equ 256f;508f	;476f	;540f
+CONST_windowHeightHalf	equ 240f;328f	;296f	;360f
 
 ;;=  Programming shortcuts
 output					equ	rax

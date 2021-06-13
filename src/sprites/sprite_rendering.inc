@@ -94,7 +94,7 @@ change_animated_sprite:
 .change:
 	mov		[CAS_spriteClip],		CAS_animationPtr
 	mov		[CAS_spriteFrame],		0
-	mov		[CAS_spriteFrameTime],	16
+	mov		[CAS_spriteFrameTime],	8
 	mov		[CAS_spriteTimer],		0
 	call	update_rectangle
 
@@ -104,21 +104,34 @@ change_animated_sprite:
 
 
 ;;=  void UpdateRectangle(AnimatedSprite:&sprite);
-;;=  RCX = &sprite		RDX = animation
-;;=  	Changes the current playing animation in the
-;;=		pointed to AnimatedSprite to the animation input.
+;;=  Updates the rectangle to the 
+;;=  RCX = &sprite
+URCT_64Output		equ		rax
+URCT_frameX			equ		eax
+URCT_output			equ		al
+URCT_animPtr		equ		rbx
+URCT_spriteFrame	equ		rcx+AnimatedSprite.curFrame
+URCT_spriteClip		equ		rcx+AnimatedSprite.curClip
+URCT_rectX			equ		rcx+AnimatedSprite.rect.x
 update_rectangle:
-	sub		rsp,28h
+	sub		rsp,	28h
+
+	xor		URCT_64Output,			URCT_64Output
 
 .update:
-	xor		rax,rax
-	mov		al,byte[rcx+AnimatedSprite.curFrame]
-	imul	rax,4
-	mov		rbx,[rcx+AnimatedSprite.curClip]
-	add		rbx,rax
-	mov		eax,[rbx]
-	mov		[rcx+AnimatedSprite.rect.x],eax
+	mov		URCT_output,			[URCT_spriteFrame]
+	imul	URCT_64Output,			4
+	mov		URCT_animPtr,			[URCT_spriteClip]
+	add		URCT_animPtr,			URCT_64Output
+	mov		URCT_frameX,			[URCT_animPtr]
+	mov		[URCT_rectX],			URCT_frameX
 
 .exit:
-	add		rsp,28h
+	add		rsp,	28h
 	ret
+
+
+;;=  Updates overworld player's movement and sprite
+;;=		INPUT:		N/A
+;;=		Output:		N/A
+;;get_animation:

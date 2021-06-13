@@ -25,6 +25,7 @@ UOP_changeSprite	equ		rcx
 ;;TODO: Fix this?
 UOP_animation		equ		r10
 UOP_playAnimation	equ		rdx
+UOP_playAnimationL	equ		dl
 update_player:
 	sub		rsp,	28h
 
@@ -66,7 +67,7 @@ update_player:
 	cmp		UOP_pollResult,			2
 	je		.hold_right
 .no_controls_pressed:
-	jmp		.exit
+	jmp		.idle_animation
 
 
 .hold_up:
@@ -119,9 +120,8 @@ update_player:
 
 
 .player_movement:
-	mov		UOP_playerMem,			[player_memory]		;;? Might not need
 	cmp		[UOP_playerIsMoving],	0
-	je		.animation
+	je		.idle_animation
 
 	mov		UOP_currentTile,		[UOP_playerTilePos]
 	cmp		[UOP_playerWorldPos],	UOP_currentTile
@@ -141,6 +141,16 @@ update_player:
 	add		rsp,28h
 	ret
 
+.idle_animation:
+	lea		UOP_changeSprite,		[UOP_playerSprite]
+	mov		UOP_playAnimationL,		[UOP_playerDirection]
+	call	change_animated_sprite
+	jmp		.exit
+
+;.animation:
+;	lea		UOP_changeSprite,		[UOP_playerSprite]
+;	mov		UOP_playAnimation,		UOP_animation
+;	call	change_animated_sprite
 
 ;;=  Gathers currently pressed keys and stores them
 ;;=		INPUT:		N/A

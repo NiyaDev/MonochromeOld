@@ -34,10 +34,10 @@ draw:
 
 .draw_test_texture:
 	;;DrawTexture(&PlayerData.spriteTexture,300,300,WHITE);
-	mov		rax,[player_memory]
-	lea		rcx,[rax+PlayerData.entity.sprite.texture]
-	mov 	rdx,300
-	mov 	r8,300
+	mov		rax,[general_memory]
+	lea		rcx,[rax+100]
+	mov 	rdx,0
+	mov 	r8,16
 	mov 	r9,WHITE
 	call	DrawTexture
 

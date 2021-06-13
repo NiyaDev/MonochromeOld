@@ -42,6 +42,12 @@ program_init:
 	lea		rcx,[rax+GeneralMemory.image]
 	call	UnloadImage
 
+.initialize_map_sprite:
+	lea		rcx,[map_pallet]
+	mov		rax,[general_memory]
+	lea		rdx,[rax+100]
+	call	import_sprite
+
 .initialize_player_sprites:
 	;;ImportSprite(&player_overworld_m_text,&PlayerData.spriteTexture)
 	lea		rcx,[player_overworld_m_text]
@@ -66,7 +72,7 @@ program_init:
 	mov		r8,[player_memory]
 	mov		r9,[animation_memory]
 	mov		rbx,[r9+32]
-	mov		[r8+PlayerData.entity.sprite.frameTime],10h
+	mov		[r8+PlayerData.entity.sprite.frameTime],8h
 	mov		[r8+PlayerData.entity.sprite.curClip],rbx
 
 ;.initialize_player_data:
