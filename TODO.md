@@ -2,11 +2,9 @@
 # Todo
 
 ## Short term
-- Fix animations
-	- Maybe seperate it completely from movement handler?
-- Reorganize general memory constants
-- Finish refactoring codebase
+- Finish refactoring codebase	(HIGH)
 	- Prioritize Animation/Movement code and standardize directions
+	- Reorganize memory constants
 
 ## Medium term
 - Textbox system
