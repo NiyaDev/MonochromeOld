@@ -31,15 +31,15 @@ program_init:
 .set_icon:
 	;;SetWindowIcon(&image)
 	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralMemory.image]
+	lea		rcx,[rax+GeneralImage]
 	lea		rdx,[icon_text]
 ;	call	qword[LoadImageRL]
 	call	LoadImageRL
 	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralMemory.image]
+	lea		rcx,[rax+GeneralImage]
 	call	SetWindowIcon
 	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralMemory.image]
+	lea		rcx,[rax+GeneralImage]
 	call	UnloadImage
 
 .initialize_map_sprite:

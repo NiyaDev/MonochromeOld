@@ -4,11 +4,18 @@
 ;*/
 
 
+
 ;;=  Structures
+struc PlayerData {
+	.entity			Entity			;64-bytes
+	.camera			Camera2D		;34-bytes
+	.ctrData		ControlData		; 4-bytes
+}	;110-bytes
 struc ControlData {
 	.direction		dw		0
 	.action			dw		0
 }
+;;TODO: Remove once settings is done
 struc KeyBindings {
 	.up				db		0
 	.down			db		0
@@ -19,12 +26,6 @@ struc KeyBindings {
 	.start			db		0
 	.select			db		0
 }
-struc PlayerData {
-	.entity			Entity			;64-bytes
-	.camera			Camera2D		;34-bytes
-	.ctrData		ControlData		; 4-bytes
-	.ctrBindings	KeyBindings		; 8-bytes
-}	;110-bytes
 
 ;;=  Macros
 virtual at 0

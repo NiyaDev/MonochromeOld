@@ -11,33 +11,33 @@ import_sprite:
 	
 	;move filename to rdx and texture
 	mov		rax,[general_memory]
-	mov		qword [rax+GeneralMemory.qword],rdx
+	mov		qword [rax+GeneralQword],rdx
 	mov		rdx,rcx
 
 	;;LoadTexture(&GeneralMemory.image,&filename);
 	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralMemory.image]
+	lea		rcx,[rax+GeneralImage]
 ;	call [LoadImageRL]
 	call	LoadImageRL
 
 	;;ImageResizeNN(&GeneralMemory.image,GeneralMemory.image.width*4,GeneralMemory.image.height*4);
 	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralMemory.image]
-	mov		edx,[rax+GeneralMemory.image.width]
+	lea		rcx,[rax+GeneralImage]
+	mov		edx,[rax+GeneralImageWidth]
 	shl		rdx,CONST_resizeFactor
-	mov		r8d,[rax+GeneralMemory.image.height]
+	mov		r8d,[rax+GeneralImageHeight]
 	shl		r8,CONST_resizeFactor
 	call	ImageResizeNN
 
 	;;LoadTextureFromImage(&texture,&GeneralMemory.image);
 	mov		rax,[general_memory]
-	mov		rcx,qword[rax+GeneralMemory.qword]
-	lea		rdx,[rax+GeneralMemory.image]
+	mov		rcx,qword[rax+GeneralQword]
+	lea		rdx,[rax+GeneralImage]
 	call	LoadTextureFromImage
 
 	;;UnloadImage(&GeneralMemory.image);
 	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralMemory.image]
+	lea		rcx,[rax+GeneralImage]
 	call	UnloadImage
 
 	add		rsp,$28

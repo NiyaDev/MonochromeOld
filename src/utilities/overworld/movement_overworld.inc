@@ -33,22 +33,22 @@ update_movement:
 	jmp		.move_negative
 .move_positive:
 	mov		r8,[general_memory]
-	mov		[r8+GeneralMemory.dword],ebx
-	fld		dword[r8+GeneralMemory.dword]
-	mov		[r8+GeneralMemory.dword],walk_speed
-	fadd	[r8+GeneralMemory.dword]
-	fstp	[r8+GeneralMemory.dword]
-	mov		ebx,[r8+GeneralMemory.dword]
+	mov		[r8+GeneralDword],ebx
+	fld		dword[r8+GeneralDword]
+	mov		dword[r8+GeneralDword],walkSpeed
+	fadd	dword[r8+GeneralDword]
+	fstp	dword[r8+GeneralDword]
+	mov		ebx,dword[r8+GeneralDword]
 	mov		[rcx+Entity.worldPos.x],ebx
 	jmp		.exit
 .move_negative:
 	mov		r8,[general_memory]
-	mov		[r8+GeneralMemory.dword],ebx
-	fld		dword[r8+GeneralMemory.dword]
-	mov		[r8+GeneralMemory.dword],walk_speed
-	fsub	[r8+GeneralMemory.dword]
-	fstp	[r8+GeneralMemory.dword]
-	mov		ebx,[r8+GeneralMemory.dword]
+	mov		dword[r8+GeneralDword],ebx
+	fld		dword[r8+GeneralDword]
+	mov		dword[r8+GeneralDword],walkSpeed
+	fsub	dword[r8+GeneralDword]
+	fstp	dword[r8+GeneralDword]
+	mov		ebx,dword[r8+GeneralDword]
 	mov		[rcx+Entity.worldPos.x],ebx
 	jmp		.exit
 
@@ -65,8 +65,8 @@ move_direction:
 	sub		rsp,28h
 
 	mov		r9,[general_memory]
-	mov		[r9+GeneralMemory.v2],rcx
-	mov		[r9+GeneralMemory.dword],64f
+	mov		qword[r9+GeneralVector2],rcx
+	mov		dword[r9+GeneralDword],64f
 
 	cmp		rdx,0			;down
 	jz		.move_down
@@ -79,27 +79,27 @@ move_direction:
 	jmp		.exit
 
 .move_down:					;down
-	fld		dword[r9+GeneralMemory.v2.y]
-	fadd	dword[r9+GeneralMemory.dword]
-	fstp	dword[r9+GeneralMemory.v2.y]
+	fld		dword[r9+GeneralVector2Y]
+	fadd	dword[r9+GeneralDword]
+	fstp	dword[r9+GeneralVector2Y]
 	jmp		.exit
 .move_right:				;right
-	fld		dword[r9+GeneralMemory.v2.x]
-	fadd	dword[r9+GeneralMemory.dword]
-	fstp	dword[r9+GeneralMemory.v2.x]
+	fld		dword[r9+GeneralVector2X]
+	fadd	dword[r9+GeneralDword]
+	fstp	dword[r9+GeneralVector2X]
 	jmp		.exit
 .move_up:					;up
-	fld		dword[r9+GeneralMemory.v2.y]
-	fsub	dword[r9+GeneralMemory.dword]
-	fstp	dword[r9+GeneralMemory.v2.y]
+	fld		dword[r9+GeneralVector2Y]
+	fsub	dword[r9+GeneralDword]
+	fstp	dword[r9+GeneralVector2Y]
 	jmp		.exit
 .move_left:					;left
-	fld		dword[r9+GeneralMemory.v2.x]
-	fsub	dword[r9+GeneralMemory.dword]
-	fstp	dword[r9+GeneralMemory.v2.x]
+	fld		dword[r9+GeneralVector2X]
+	fsub	dword[r9+GeneralDword]
+	fstp	dword[r9+GeneralVector2X]
 	jmp		.exit
 
 .exit:
-	mov		rax,[r9+GeneralMemory.v2]
+	mov		rax,[r9+GeneralVector2]
 	add		rsp,28h
 	ret

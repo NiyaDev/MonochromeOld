@@ -5,6 +5,15 @@
 - Finish refactoring codebase	(HIGH)
 	- Prioritize Animation/Movement code and standardize directions
 	- Reorganize memory constants
+- Menu system					(LOW)
+	- Encyclopedia
+	- Monsters
+	- Inventory
+	- Player
+	- Save
+	- Options
+		- Prio
+	- Quit
 
 ## Medium term
 - Textbox system
@@ -20,14 +29,6 @@
 		- Can take you to different points on map or to different maps.
 - Combat
 	- Different movement system
-- Menu system
-	- Encyclopedia
-	- Monsters
-	- Inventory
-	- Player
-	- Save
-	- Options
-	- Quit
 - Make it work on Linux
 
 ## Long term

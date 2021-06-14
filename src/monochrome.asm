@@ -12,25 +12,26 @@ format MS64 COFF
 ;TODO: Still gotta work on getting linux support working
 ;format ELF64 executable 3
 
+
 section '.text' code readable executable
 public start as 'WinMain'
 
 
-start:
-	sub	rsp,	8
-	sub rsp,	$100
 
+;;=  Main function
+MAIN_shouldClose	equ		rax
+start:
+	sub		rsp,	8
+	sub		rsp,	$100
 .init:
 	call	program_init
-
 .loop:
 	call	update
 	call	draw
 	
 	call	WindowShouldClose
-	cmp		rax,				1
-	jnz		.loop
-
+	cmp		MAIN_shouldClose,	1
+	jne		.loop
 .exit:
 	call	program_exit
 	
