@@ -9,7 +9,6 @@
 EntitySize			equ		64
 
 ;;=  Structures
-;* Overworld entity
 struc Entity {
 	.sprite		AnimatedSprite	;46-bytes
 	.isMoving	db		0		; 1-byte
