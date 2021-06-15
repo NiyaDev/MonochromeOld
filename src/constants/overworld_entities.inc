@@ -5,6 +5,9 @@
 
 
 
+;;=  Constants
+EntitySize			equ		64
+
 ;;=  Structures
 ;* Overworld entity
 struc Entity {

@@ -4,6 +4,8 @@
 ;*/
 
 
+
+;;=  Constants
 CONST_memorySize	equ 	10000	;Total of: 10,000 bytes
 
 
