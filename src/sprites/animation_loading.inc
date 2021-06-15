@@ -17,14 +17,14 @@ load_animations:
 	push	rdx
 
 .load_file:
-	lea		LDF_filename,		[animations_text]
-	mov		LDF_outputFormat,	1
+	lea		filename,				[animations_text]	;;file_loading.inc
+	mov		outputFormat,			1					;;file_loading.inc
 	call	load_file_data
-	mov		[animation_memory],	LDA_output
+	mov		[animation_memory],		LDA_output
 .create_toc:
-	mov		PRS_dataPtr,		LDA_output
-	mov		PRS_dataSize,		4
-	mov		PRS_buffer_32,		0xFFFFFFFF
+	mov		PRS_dataPtr,			LDA_output
+	mov		PRS_dataSize,			4
+	mov		PRS_buffer_32,			0xFFFFFFFF
 	call	parse_file_data
 
 .exit:
