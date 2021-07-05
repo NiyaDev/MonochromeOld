@@ -6,96 +6,109 @@
 
 ;;=  Draws the current frame in the pointed to AnimatedSprite at the input position
 ;;=  	Input:		RCX = &sprite
-;;=					RDX = positon
-DAS_sprite			equ		rcx
-DAS_position		equ		rdx
+;;=					RDX = position
+;;=		Output:		N/A
+spritePtr			equ		rcx		;Input
+position			equ		rdx		;Input
 
-DAS_generalMemPtr	equ		r8
-DAS_spritePtr		equ		r9
-DAS_spriteFrameTime	equ		r9+AnimatedSprite.frameTime
-DAS_spriteTimer		equ		r9+AnimatedSprite.timer
+frameIndex			equ		rax
+frameIndexHalf		equ		eax
+frameIndexLow		equ		al
+clipPtr				equ		rbx
+rectanglePtr		equ		rdx
+generalPtr			equ		r8
+currentSpritePtr	equ		r9
+timer				equ		r10
+timerWord			equ		r10w
+timerByte			equ		r10b
 
-DAS_timing			equ		r10
-DAS_timingByte		equ		r10b
-DAS_timingWord		equ		r10w
+aniTexture			equ		r9+AnimatedSprite.texture
+aniRectangle		equ		r9+AnimatedSprite.rect
+aniCurClip			equ		r9+AnimatedSprite.curClip
+aniCurFrame			equ		r9+AnimatedSprite.curFrame
+aniFrameTime		equ		r9+AnimatedSprite.frameTime
+aniTimer			equ		r9+AnimatedSprite.timer
+
+clipPtrOffset		equ		rbx+4
+
+endFrame			equ		0xffffffff
 draw_animated_sprite:
 	sub		rsp,	28h
 
-	mov		DAS_generalMemPtr,		[general_memory]
-	mov		DAS_spritePtr,			DAS_sprite
-	xor		DAS_timing,				DAS_timing
+.init:
+	mov		generalPtr,				[general_memory]
+	mov		currentSpritePtr,		spritePtr
+	xor		timer,					timer
 
-	mov		DAS_timingByte,			[DAS_spriteFrameTime]
+	mov		timerByte,				[aniFrameTime]
 
-	inc		[DAS_spriteTimer]
-	cmp		[DAS_spriteTimer],		DAS_timingWord
-	jge		.change_sprite
-	jmp		.display_sprite
+	inc		[aniTimer]
+	cmp		[aniTimer],				timerWord
+	jl		.display_sprite
 
 .change_sprite:
-	mov		[DAS_spriteTimer],		0
-	xor		rax,rax
+	mov		[aniTimer],				0
+	xor		frameIndex,				frameIndex
 
-	mov		al,byte[r9+AnimatedSprite.curFrame]
-	imul	rax,4
-	mov		rbx,[r9+AnimatedSprite.curClip]
-	add		rbx,rax
-	mov		eax,[rbx+4]
-	cmp		eax,0xffffffff
+	mov		frameIndexLow,			[aniCurFrame]
+	imul	frameIndex,				4
+	mov		clipPtr,				[aniCurClip]
+	add		clipPtr,				frameIndex
+	mov		frameIndexHalf,			[clipPtrOffset]
+	cmp		frameIndexHalf,			endFrame
 	je		.recall
 .increase:
-	inc		[r9+AnimatedSprite.curFrame]
+	inc		[aniCurFrame]
 	jmp		.update_rect
 .recall:
-	mov		[r9+AnimatedSprite.curFrame],0
+	mov		[aniCurFrame],			0
 	jmp		.update_rect
 
 .update_rect:
-	mov		rcx,r9
+	mov		spritePtr,				currentSpritePtr
 	call	update_rectangle
 
 .display_sprite:
-	;;DrawTextureRec(&PlayerData.spriteTexture,&PlayerData.spriteRect,{PlayerData.camera.target.x-64f,PlayerData.camera.target.y-64f},WHITE);
-	lea		rcx,[r9+AnimatedSprite.texture]
-	mov		r8,rdx
-	lea		rdx,[r9+AnimatedSprite.rect]
-	mov		r9d,WHITE
+	lea		spritePtr,				[aniTexture]
+	mov		r8,						rdx
+	lea		rectanglePtr,			[aniRectangle]
+	mov		r9d,					WHITE
 	call	DrawTextureRec
 
 	add		rsp,28h
 	ret
 
 
-;;=  void ChangeAnimation(AnimatedSprite:&sprite, int:animation);
-;;=  RCX = &sprite		RDX = animation
-;;=  	Changes the current playing animation in the
-;;=		pointed to AnimatedSprite to the animation input.
-CAS_spritePtr		equ		rcx
-CAS_animation		equ		rdx
+;;=  Changes the current playing animation in the pointed to AnimatedSprite to the animation input.
+;;=  	Input:		RCX = &sprite
+;;=					RDX = animationNum
+;;=		Output:		N/A
+spritePtr			equ		rcx			;input
+animationNum		equ		rdx			;input
 
-CAS_spriteClip		equ		rcx+AnimatedSprite.curClip
-CAS_spriteFrame		equ		rcx+AnimatedSprite.curFrame
-CAS_spriteFrameTime	equ		rcx+AnimatedSprite.frameTime
-CAS_spriteTimer		equ		rcx+AnimatedSprite.timer
+newAnimationPtr		equ		rax
+animationPtr		equ		r8
 
-CAS_animationMem	equ		r8
-CAS_animationPtr	equ		rax
+aniCurClip			equ		rcx+AnimatedSprite.curClip
+aniCurFrame			equ		rcx+AnimatedSprite.curFrame
+aniFrameTime		equ		rcx+AnimatedSprite.frameTime
+aniTimer			equ		rcx+AnimatedSprite.timer
 change_animated_sprite:
 	sub 	rsp,	28h
 
 .Init:
-	mov		CAS_animationMem,		[animation_memory]
-	imul	CAS_animation,			8
-	add		CAS_animationMem,		CAS_animation
-	mov		CAS_animationPtr,		[CAS_animationMem]
+	mov		animationPtr,			[animation_memory]
+	imul	animationNum,			8
+	add		animationPtr,			animationNum
+	mov		newAnimationPtr,		[animationPtr]
 .check:
-	cmp		CAS_animationPtr,		[CAS_spriteClip]
+	cmp		newAnimationPtr,		[aniCurClip]
 	je		.exit
 .change:
-	mov		[CAS_spriteClip],		CAS_animationPtr
-	mov		[CAS_spriteFrame],		0
-	mov		[CAS_spriteFrameTime],	8
-	mov		[CAS_spriteTimer],		0
+	mov		[aniCurClip],			newAnimationPtr
+	mov		[aniCurFrame],			0
+	mov		[aniFrameTime],			8
+	mov		[aniTimer],				0
 	call	update_rectangle
 
 .exit:
@@ -103,35 +116,32 @@ change_animated_sprite:
 	ret
 
 
-;;=  void UpdateRectangle(AnimatedSprite:&sprite);
 ;;=  Updates the rectangle to the 
-;;=  RCX = &sprite
-URCT_64Output		equ		rax
-URCT_frameX			equ		eax
-URCT_output			equ		al
-URCT_animPtr		equ		rbx
-URCT_spriteFrame	equ		rcx+AnimatedSprite.curFrame
-URCT_spriteClip		equ		rcx+AnimatedSprite.curClip
-URCT_rectX			equ		rcx+AnimatedSprite.rect.x
+;;=  	Input:		RCX = &sprite
+;;=		Output:		N/A
+spritePtr			equ		rcx		;input
+
+frameTotal			equ		rax
+frameX				equ		eax
+currentFrame		equ		al
+animationPtr		equ		rbx
+
+aniRectangleX		equ		rcx+AnimatedSprite.rect.x
+aniCurClip			equ		rcx+AnimatedSprite.curClip
+aniCurFrame			equ		rcx+AnimatedSprite.curFrame
 update_rectangle:
 	sub		rsp,	28h
 
-	xor		URCT_64Output,			URCT_64Output
+	xor		frameTotal,				frameTotal
 
 .update:
-	mov		URCT_output,			[URCT_spriteFrame]
-	imul	URCT_64Output,			4
-	mov		URCT_animPtr,			[URCT_spriteClip]
-	add		URCT_animPtr,			URCT_64Output
-	mov		URCT_frameX,			[URCT_animPtr]
-	mov		[URCT_rectX],			URCT_frameX
+	mov		currentFrame,			[aniCurFrame]
+	imul	frameX,					4
+	mov		animationPtr,			[aniCurClip]
+	add		animationPtr,			frameTotal
+	mov		frameX,					[animationPtr]
+	mov		[aniRectangleX],		frameX
 
 .exit:
 	add		rsp,	28h
 	ret
-
-
-;;=  Updates overworld player's movement and sprite
-;;=		INPUT:		N/A
-;;=		Output:		N/A
-;;get_animation:

@@ -5,6 +5,8 @@
 ### Changed
 - Refactored General memory structure into variable offsets and seperated Overworld Entity structure into it's own file
 - Seperated memory.inc functions into seperate files
+### Removed
+- Deleted Sprite_legacy.inc as backups have been made if necesary
 
 ## [0.1.0] - 21/6/6 -> 21/6/13
 ### Changed

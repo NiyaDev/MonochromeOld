@@ -5,40 +5,55 @@
 
 
 ;;=  Grabs a file from the input filename, outputs a resized texture, and frees the image
-;;=  RCX = &filename		RDX = &texture
-import_sprite:
-	sub		rsp,$28
-	
-	;move filename to rdx and texture
-	mov		rax,[general_memory]
-	mov		qword [rax+GeneralQword],rdx
-	mov		rdx,rcx
+;;=		Input:		RCX = &filename
+;;=					RDX = &texture
+;;=		Output:		N/A
+filenamePtr			equ		rcx		;Input
+texturePtr			equ		rdx		;Input
 
-	;;LoadTexture(&GeneralMemory.image,&filename);
-	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralImage]
-;	call [LoadImageRL]
+generalPtr			equ		rax
+imagePtr			equ		rcx
+imageWidth			equ		edx
+imageWidthFull		equ		rdx
+imageHeight			equ		r8d
+imageHeightFull		equ		r8
+
+memTexturePtr		equ		rax+GeneralQword
+memImage			equ		rax+GeneralImage
+memImageWidth		equ		rax+GeneralImageWidth
+memImageHeight		equ		rax+GeneralImageHeight
+import_sprite:
+	sub		rsp,	$28
+	
+.load_image:
+	mov		generalPtr,				[general_memory]
+	mov		[memTexturePtr],		texturePtr
+	mov		texturePtr,				filenamePtr
+
+	lea		imagePtr,				[memImage]
 	call	LoadImageRL
 
-	;;ImageResizeNN(&GeneralMemory.image,GeneralMemory.image.width*4,GeneralMemory.image.height*4);
-	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralImage]
-	mov		edx,[rax+GeneralImageWidth]
-	shl		rdx,CONST_resizeFactor
-	mov		r8d,[rax+GeneralImageHeight]
-	shl		r8,CONST_resizeFactor
+.resize_image:
+	mov		generalPtr,				[general_memory]
+
+	lea		imagePtr,				[memImage]
+	mov		imageWidth,				[memImageWidth]
+	shl		imageWidthFull,			CONST_resizeFactor
+	mov		imageHeight,			[memImageHeight]
+	shl		imageHeightFull,		CONST_resizeFactor
 	call	ImageResizeNN
 
-	;;LoadTextureFromImage(&texture,&GeneralMemory.image);
-	mov		rax,[general_memory]
-	mov		rcx,qword[rax+GeneralQword]
-	lea		rdx,[rax+GeneralImage]
+.convert_image_texture:
+	mov		generalPtr,				[general_memory]
+	mov		imagePtr,				[memTexturePtr]
+	lea		texturePtr,				[memImage]
 	call	LoadTextureFromImage
 
-	;;UnloadImage(&GeneralMemory.image);
-	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralImage]
+.unload_image:
+	mov		generalPtr,				[general_memory]
+	lea		imagePtr,				[memImage]
 	call	UnloadImage
 
+.exit:
 	add		rsp,$28
 	ret
