@@ -5,90 +5,120 @@
 
 
 ;;=  Initializes all necessary systems and memory spaces
+allocateMemoryOut	equ		rax
+offsetMover			equ		rbx
+initWindowInputC	equ		ecx
+targetFPSInput		equ		ecx
+allocateMemoryInput	equ		rcx
+loadImageInputC		equ		rcx
+setIconInput		equ		rcx
+unloadImageInput	equ		rcx
+importSpriteInputC	equ		rcx
+initWindowInputD	equ		edx
+loadImageInputD		equ		rdx
+importSpriteInputD	equ		rdx
+initWindowInput8	equ		r8
+
+playerRect			equ		rax
+playerRectX			equ		rax+PlayerData.entity.sprite.rect.x
+playerRectY			equ		rax+PlayerData.entity.sprite.rect.y
+playerRectWidth		equ		rax+PlayerData.entity.sprite.rect.width
+playerRectHeight	equ		rax+PlayerData.entity.sprite.rect.height
+
+generalMemory		equ		r8
+generalOffset		equ		r8+100
+generalImage		equ		r8+GeneralImage
+
+playerMemory		equ		r8
+playerTexture		equ		r8+PlayerData.entity.sprite.texture
+playerFrameTime		equ		r8+PlayerData.entity.sprite.frameTime
+playerCurClip		equ		r8+PlayerData.entity.sprite.curClip
+playerDirection		equ		r8+PlayerData.ctrData.direction
+playerCameraTargetX	equ		r8+PlayerData.camera.target.x
+playerCameraTargetY	equ		r8+PlayerData.camera.target.y
+playerCameraOffsetX	equ		r8+PlayerData.camera.offset.x
+playerCameraOffsetY	equ		r8+PlayerData.camera.offset.y
+playerCameraZoom	equ		r8+PlayerData.camera.zoom
+
+animationMemory		equ		r9
+animationOffset		equ		r9+32
 program_init:
-	sub		rsp,$28
+	sub		rsp,	$28
 
 .initialize_window:
-	mov		ecx,CONST_windowWidth
-	mov		edx,CONST_windowHeight
-	lea		r8,[title]
+	mov		initWindowInputC,		CONST_windowWidth
+	mov		initWindowInputD,		CONST_windowHeight
+	lea		initWindowInput8,		[title]
 	call	InitWindow
 .set_fps:
-	mov		ecx,60
+	mov		targetFPSInput,			60
 	call	SetTargetFPS
 
 .allocate_general_memory:
-	mov		rcx,CONST_memorySize
+	mov		allocateMemoryInput,	CONST_memorySize
 	call	allocate_memory
-	mov		[general_memory],rax
+	mov		[general_memory],		allocateMemoryOut
 .allocate_player_memory:
-	mov		rcx,CONST_memorySize
+	mov		allocateMemoryInput,	CONST_memorySize
 	call	allocate_memory
-	mov		[player_memory],rax
+	mov		[player_memory],		allocateMemoryOut
 .allocate_animation_memory:
 	call	load_animations
 
 .set_icon:
-	;;SetWindowIcon(&image)
-	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralImage]
-	lea		rdx,[icon_text]
-;	call	qword[LoadImageRL]
+	mov		generalMemory,			[general_memory]
+	lea		loadImageInputC,		[generalImage]
+	lea		loadImageInputD,		[icon_text]
 	call	LoadImageRL
-	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralImage]
+
+	mov		generalMemory,			[general_memory]
+	lea		setIconInput,			[generalImage]
 	call	SetWindowIcon
-	mov		rax,[general_memory]
-	lea		rcx,[rax+GeneralImage]
+
+	mov		generalMemory,			[general_memory]
+	lea		unloadImageInput,		[generalImage]
 	call	UnloadImage
 
 .initialize_map_sprite:
-	lea		rcx,[map_pallet]
-	mov		rax,[general_memory]
-	lea		rdx,[rax+100]
+	lea		importSpriteInputC,		[map_pallet]
+	mov		generalMemory,			[general_memory]
+	lea		importSpriteInputD,		[generalOffset]
 	call	import_sprite
 
 .initialize_player_sprites:
-	;;ImportSprite(&player_overworld_m_text,&PlayerData.spriteTexture)
-	lea		rcx,[player_overworld_m_text]
-	mov		rax,[player_memory]
-	lea		rdx,[rax+PlayerData.entity.sprite.texture]
+	lea		importSpriteInputC,		[player_overworld_m_text]
+	mov		playerMemory,			[player_memory]
+	lea		importSpriteInputD,		[playerTexture]
 	call	import_sprite
 
 .initialize_player_data:
 ;;TODO: Keep this up-to-date.
-	mov		r8,[player_memory]
-	mov		r9,[animation_memory]
-;	mov		[r8+PlayerData.entity.sprite.]
+	mov		playerMemory,			[player_memory]
+	mov		animationMemory,		[animation_memory]
+
 .initialize_sprite_rectangle:
-	;;PlayerData.spriteRect = {0,0,64f,64f};
-	mov		rax,[player_memory]
-	mov		dword [rax+PlayerData.entity.sprite.rect.x],0f
-	mov		dword [rax+PlayerData.entity.sprite.rect.y],0f
-	mov		dword [rax+PlayerData.entity.sprite.rect.width],64f
-	mov		dword [rax+PlayerData.entity.sprite.rect.height],64f
+	mov		playerRect,				[player_memory]
+	mov		[playerRectX],			0f
+	mov		[playerRectY],			0f
+	mov		[playerRectWidth],		64f
+	mov		[playerRectHeight],		64f
 
 .initialize_animation:
-	mov		r8,[player_memory]
-	mov		r9,[animation_memory]
-	mov		rbx,[r9+32]
-	mov		[r8+PlayerData.entity.sprite.frameTime],8h
-	mov		[r8+PlayerData.entity.sprite.curClip],rbx
-
-;.initialize_player_data:
-	mov		[r8+PlayerData.ctrData.direction],0
+	mov		offsetMover,			[animationOffset]
+	mov		[playerFrameTime],		8h
+	mov		[playerCurClip],		offsetMover
+	mov		[playerDirection],		0
 
 .setup_camera:
-	;;camera = {0,0,CONST_windowWidthHalf,CONST_windowHeightHalf,1f};
-	mov		rax,[player_memory]
-	mov		dword [rax+PlayerData.camera.target.x],0f
-	mov		dword [rax+PlayerData.camera.target.y],0f
-	mov		dword [rax+PlayerData.camera.offset.x],CONST_windowWidthHalf
-	mov		dword [rax+PlayerData.camera.offset.y],CONST_windowHeightHalf
-	mov		dword [rax+PlayerData.camera.zoom],1f
+	mov		playerMemory,			[player_memory]
+	mov		[playerCameraTargetX],	0f
+	mov		[playerCameraTargetY],	0f
+	mov		[playerCameraOffsetX],	CONST_windowWidthHalf
+	mov		[playerCameraOffsetY],	CONST_windowHeightHalf
+	mov		[playerCameraZoom],		1f
 
 .exit:
-	add		rsp,$28
+	add		rsp,	$28
 	ret
 
 

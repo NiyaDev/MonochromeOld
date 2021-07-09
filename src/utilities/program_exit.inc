@@ -4,22 +4,21 @@
 ;*/
 
 ;;=  Closes all systems and memory spaces
+generalMemory		equ		rcx
+playerMemory		equ		rcx
+animationMemory		equ		rcx
 program_exit:
-	sub		rsp,28h
+	sub		rsp,	28h
 
 .free_memory_allocations:
-	;;MemFree(&general_memory)
-	mov		rcx,[general_memory]
+	mov		generalMemory,			[general_memory]
 	call	MemFree
-	;;MemFree(&player_memory)
-	mov		rcx,[player_memory]
+	mov		playerMemory,			[player_memory]
 	call	MemFree
-	;;MemFree(&animation_memory)
-	mov		rcx,[animation_memory]
+	mov		animationMemory,		[animation_memory]
 	call	MemFree
 	
-	;;CloseWindowRL()
 	call	CloseWindowRL
 
-	add		rsp,28h
+	add		rsp,	28h
 	ret

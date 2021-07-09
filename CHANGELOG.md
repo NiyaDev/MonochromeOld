@@ -1,10 +1,10 @@
 
 # Changelog
 
-## [Unreleased] - 21/6/13 -> 31/??/??
+## [Unreleased] - 21/6/13 -> 21/??/??
 ### Changed
-- Refactored General memory structure into variable offsets and seperated Overworld Entity structure into it's own file
-- Seperated memory.inc functions into seperate files
+- Heavy refactorization
+- Split player_controls.inc, memory.inc, and movement_overworld.inc into seperate files
 ### Removed
 - Deleted Sprite_legacy.inc as backups have been made if necesary
 

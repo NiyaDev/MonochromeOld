@@ -5,70 +5,60 @@
 
 
 ;;=  Standard Draw call
-;;=  void Draw(void)
+begin2DInput		equ		rcx
+drawTextureInputC	equ		rcx
+drawAnimatedInputC	equ		rcx
+clearBGInput		equ		ecx
+drawTextureInputD	equ		rdx
+drawAnimatedInputD	equ		rdx
+drawTextureInput8	equ		r8
+drawTextureInput9	equ		r9
+
+playerMemory		equ		r8
+playerCamera		equ		r8+PlayerData.camera
+playerSprite		equ		r8+PlayerData.entity.sprite
+playerWorldPos		equ		r8+PlayerData.entity.worldPos
+
+generalMemory		equ		r8
+generalPtr			equ		r8+100
 draw:
-	sub		rsp,$28
+	sub		rsp,	$28
 
 .begin_draw:
-	;;BeginDrawing()
-	call	qword BeginDrawing
+	call	BeginDrawing
 
 .clear_background:
-	;;ClearBackground(RAYWHITE)
-	mov		ecx,RAYWHITE
-	call	qword ClearBackground
+	mov		clearBGInput,			RAYWHITE
+	call	ClearBackground
 
 .render_camera:
-	;;BeginMode2D(&camera);
-	mov		rax,[player_memory]
-	lea		rcx,[rax+PlayerData.camera]
-	call	qword BeginMode2D
-
-	;;DrawRectangle(-100,100,200,100,WHITE);
-	mov		rcx,-100
-	mov		rdx,100
-	mov		r8,200
-	mov		r9,100
-	mov		StackVariableOne,WHITE
-	call	DrawRectangle
+	mov		playerMemory,			[player_memory]
+	lea		begin2DInput,			[playerCamera]
+	call	BeginMode2D
 
 .draw_test_texture:
-	;;DrawTexture(&PlayerData.spriteTexture,300,300,WHITE);
-	mov		rax,[general_memory]
-	lea		rcx,[rax+100]
-	mov 	rdx,0
-	mov 	r8,16
-	mov 	r9,WHITE
+	mov		generalMemory,			[general_memory]
+	lea		drawTextureInputC,		[generalPtr]
+	mov 	drawTextureInputD,		0
+	mov 	drawTextureInput8,		16
+	mov 	drawTextureInput9,		WHITE
 	call	DrawTexture
 
 .draw_player_sprite:
-;	call draw_player
-	mov		r8,[player_memory]
-	lea		rcx,[r8+PlayerData.entity.sprite]
-	mov		rdx,[r8+PlayerData.entity.worldPos] ;[r8+PlayerData.camera.target]
+	mov		playerMemory,			[player_memory]
+	lea		drawAnimatedInputC,		[playerSprite]
+	mov		drawAnimatedInputD,		[playerWorldPos]
 	call	draw_animated_sprite
 
 .ender_render_camera:
-	;;EndMode2D()
 	call	EndMode2D
 
-.end_draw::
-	;;EndDrawing()
+.end_draw:
 	call	EndDrawing
 
 .exit:
-	add		rsp,$28
+	add		rsp,	$28
 	ret
 
 
 include '../sprites/sprite_rendering.inc'
-
-
-;.DEBUG_text:
-;	;;DrawText(*text_onscreen,text_position_x,text_position_y,20,BLACK)
-;	lea 	rcx,[text_onscreen]
-;	mov 	rdx,10
-;	mov 	r8,10
-;	mov 	r9,20
-;	mov 	dword [rsp+0x20],BLACK
-;	call	[DrawTextRL]

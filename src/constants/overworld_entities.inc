@@ -7,6 +7,10 @@
 
 ;;=  Constants
 EntitySize			equ		64
+dirDown				equ		0
+dirUp				equ		1
+dirLeft				equ		2
+dirRight			equ		3
 
 ;;=  Structures
 struc Entity {
