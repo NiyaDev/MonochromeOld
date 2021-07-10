@@ -12,8 +12,8 @@ struc PlayerData {
 	.ctrData		ControlData		; 4-bytes
 }	;110-bytes
 struc ControlData {
-	.direction		dw		0
-	.action			dw		0
+	.direction		dd		0
+	.action			dd		0
 }
 ;;TODO: Remove once settings is done
 struc KeyBindings {

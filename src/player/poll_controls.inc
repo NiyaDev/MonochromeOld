@@ -15,6 +15,7 @@ output				equ		rax		;Output
 outputWord			equ		ax
 selectionHigh		equ		ch
 selectionWord		equ		cx
+selectionDword		equ		ecx
 
 playerMemory		equ		r8
 playerDirection		equ		r8+PlayerData.ctrData.direction
@@ -30,12 +31,12 @@ poll_controls:
 ;;TODO: If so, poll in action, rather than direction
 
 .poll:
-	bt		[playerDirection],		selectionWord
+	bt		[playerDirection],		selectionDword
 	jnc		.exit
 
 	add		outputWord,				1
 	add		selectionWord,			12
-	bt		[playerDirection],		selectionWord
+	bt		[playerDirection],		selectionDword
 	jnc		.exit
 
 	add		outputWord,				1

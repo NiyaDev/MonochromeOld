@@ -37,6 +37,13 @@ KEY_X			equ 88
 KEY_Y			equ 89
 KEY_Z			equ 90
 
+KEY_ENTER		equ 257
+KEY_BACKSPACE	equ 259
+
+MOUSE_LEFT		equ	0
+MOUSE_RIGHT		equ	1
+MOUSE_MIDDLE	equ	2
+
 ;;=  Structures
 struc Color r,g,b,a {
 	.r	db	r

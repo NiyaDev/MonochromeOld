@@ -14,6 +14,7 @@ keyInput			equ		ecx
 
 playerMemory		equ		r8
 playerDirection		equ		r8+PlayerData.ctrData.direction
+playerAction		equ		r8+PlayerData.ctrData.action
 set_controls:
 	sub		rsp,	28h
 
@@ -25,6 +26,7 @@ set_controls:
 	mov		playerMemory,			[player_memory]
 .shift_last_bits:
 	shl		[playerDirection],		4
+	shl		[playerAction],			4
 
 .check_down:
 	mov		keyInput,				KEY_S
@@ -48,10 +50,33 @@ set_controls:
 	mov		keyInput,				KEY_D
 	call	IsKeyDown
 	cmp		outputByte,				1
-	jne		.exit
+	jne		.check_confirm
 	bts		[playerDirection],		dirRight
 
-;;TODO: Scan for action keys as well
+.check_confirm:
+	mov		keyInput,				MOUSE_LEFT
+	call	IsMouseButtonDown
+	cmp		outputByte,				1
+	jne		.exit
+	bts		[playerAction],			0
+.check_cancel:
+	mov		keyInput,				MOUSE_RIGHT
+	call	IsMouseButtonDown
+	cmp		outputByte,				1
+	jne		.check_start
+	bts		[playerAction],			1
+.check_start:
+	mov		keyInput,				KEY_ENTER
+	call	IsKeyDown
+	cmp		outputByte,				1
+	jne		.check_select
+	bts		[playerAction],			2
+.check_select:
+	mov		keyInput,				KEY_BACKSPACE
+	call	IsKeyDown
+	cmp		outputByte,				1
+	jne		.exit
+	bts		[playerAction],			3
 
 .exit:
 	pop		rcx
