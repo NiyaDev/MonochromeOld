@@ -30,7 +30,8 @@ update_player:
 	xor		rdx,rdx
 
 .set_controls:
-	call	set_controls
+;	call	set_controls
+	call	set_controls_new
 
 .init:
 	xor		pollSelection,			pollSelection

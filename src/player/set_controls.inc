@@ -7,6 +7,58 @@
 ;;=  Gathers currently pressed keys and stores them
 ;;=		INPUT:		N/A
 ;;=		Output:		N/A
+result				equ		rax
+outputByte			equ		al
+counter				equ		rbx
+keyInput			equ		cx
+
+playerMemory		equ		r8
+playerInput			equ		r8+PlayerData.ctrData.input
+playerDirection		equ		r8+PlayerData.ctrData.direction
+playerAction		equ		r8+PlayerData.ctrData.action
+playerKeys			equ		r8+PlayerData.keyBindings
+
+keybindingsPtr		equ		r9
+inputPtr			equ		r10
+set_controls_new:
+	sub		rsp,	28h
+	push	rbx
+	push	r8
+	push	r9
+
+.setup:
+	xor		result,					result
+	xor		keyInput,				keyInput
+	mov		playerMemory,			[player_memory]
+	shl		[playerInput],			8
+
+	lea		keybindingsPtr,			[playerKeys]
+	lea		inputPtr,				[playerInput]
+	mov		counter,				0
+
+.loop:
+	mov		keyInput,				[keybindingsPtr]
+	call	IsKeyDown
+	cmp		outputByte,				1
+	jne		.loop_end
+	bts		[inputPtr],				counter
+.loop_end:
+	add		keybindingsPtr,			2
+	inc		counter
+	cmp		counter,				8
+	jne		.loop
+
+.exit:
+	pop		r9
+	pop		r8
+	pop		rbx
+	add		rsp,	28h
+	ret
+
+
+;;=  Gathers currently pressed keys and stores them
+;;=		INPUT:		N/A
+;;=		Output:		N/A
 ;;TODO:	set up keybindings
 output				equ		rax
 outputByte			equ		al
@@ -55,13 +107,13 @@ set_controls:
 
 .check_confirm:
 	mov		keyInput,				MOUSE_LEFT
-	call	IsMouseButtonDown
+;	call	IsMouseButtonDown
 	cmp		outputByte,				1
 	jne		.exit
 	bts		[playerAction],			0
 .check_cancel:
 	mov		keyInput,				MOUSE_RIGHT
-	call	IsMouseButtonDown
+;	call	IsMouseButtonDown
 	cmp		outputByte,				1
 	jne		.check_start
 	bts		[playerAction],			1

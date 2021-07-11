@@ -10,6 +10,19 @@
 ;;=						4:Confirm	5:Cancel	6:Start		7:Select
 ;;=		Output:		RAX = buttonData
 ;;=						0:None		1:Tap		2:Hold
+pooll_controls_new:
+	sub		rsp,	28h
+
+	add		rsp,	28h
+	ret
+
+	
+;;=  Polls currently stored controls
+;;=		INPUT:		RCX = control
+;;=						0:Down		1:Up		2:Left		3:Right
+;;=						4:Confirm	5:Cancel	6:Start		7:Select
+;;=		Output:		RAX = buttonData
+;;=						0:None		1:Tap		2:Hold
 output				equ		rax		;Output
 
 outputWord			equ		ax
@@ -42,5 +55,5 @@ poll_controls:
 	add		outputWord,				1
 
 .exit:
-	add		rsp,28h
+	add		rsp,	28h
 	ret

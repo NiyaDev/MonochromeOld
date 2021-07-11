@@ -10,21 +10,23 @@ struc PlayerData {
 	.entity			Entity			;64-bytes
 	.camera			Camera2D		;34-bytes
 	.ctrData		ControlData		; 4-bytes
+	.keyBindings	KeyBindings		;16-bytes
 }	;110-bytes
 struc ControlData {
+	.input			dq		0
 	.direction		dd		0
 	.action			dd		0
 }
 ;;TODO: Remove once settings is done
 struc KeyBindings {
-	.up				db		0
-	.down			db		0
-	.right			db		0
-	.left			db		0
-	.confirm		db		0
-	.cancel			db		0
-	.start			db		0
-	.select			db		0
+	.down			dw		0
+	.up				dw		0
+	.left			dw		0
+	.right			dw		0
+	.confirm		dw		0
+	.cancel			dw		0
+	.start			dw		0
+	.select			dw		0
 }
 
 ;;=  Macros

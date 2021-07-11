@@ -33,12 +33,23 @@ playerMemory		equ		r8
 playerTexture		equ		r8+PlayerData.entity.sprite.texture
 playerFrameTime		equ		r8+PlayerData.entity.sprite.frameTime
 playerCurClip		equ		r8+PlayerData.entity.sprite.curClip
+
 playerDirection		equ		r8+PlayerData.ctrData.direction
+
 playerCameraTargetX	equ		r8+PlayerData.camera.target.x
 playerCameraTargetY	equ		r8+PlayerData.camera.target.y
 playerCameraOffsetX	equ		r8+PlayerData.camera.offset.x
 playerCameraOffsetY	equ		r8+PlayerData.camera.offset.y
 playerCameraZoom	equ		r8+PlayerData.camera.zoom
+
+playerKeyDown		equ		r8+PlayerData.keyBindings.down
+playerKeyUp			equ		r8+PlayerData.keyBindings.up
+playerKeyLeft		equ		r8+PlayerData.keyBindings.left
+playerKeyRight		equ		r8+PlayerData.keyBindings.right
+playerKeyConfirm	equ		r8+PlayerData.keyBindings.confirm
+playerKeyCancel		equ		r8+PlayerData.keyBindings.cancel
+playerKeyStart		equ		r8+PlayerData.keyBindings.start
+playerKeySelect		equ		r8+PlayerData.keyBindings.select
 
 animationMemory		equ		r9
 animationOffset		equ		r9+32
@@ -116,6 +127,17 @@ program_init:
 	mov		[playerCameraOffsetX],	CONST_windowWidthHalf
 	mov		[playerCameraOffsetY],	CONST_windowHeightHalf
 	mov		[playerCameraZoom],		1f
+
+;;TODO: temporary
+.setup_Keybindings:
+	mov		[playerKeyUp],			83
+	mov		[playerKeyDown],		87
+	mov		[playerKeyLeft],		65
+	mov		[playerKeyRight],		68
+	mov		[playerKeyConfirm],		0
+	mov		[playerKeyCancel],		1
+	mov		[playerKeyStart],		257
+	mov		[playerKeySelect],		259
 
 .exit:
 	add		rsp,	$28
