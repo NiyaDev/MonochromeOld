@@ -2,10 +2,7 @@
 # Todo
 
 ## Short term
-- Finish refactoring codebase	(HIGH)
-	- Prioritize Animation/Movement code and standardize directions
-	- Reorganize memory constants
-- Menu system					(LOW)
+- Menu system
 	- Encyclopedia
 	- Monsters
 	- Inventory
@@ -33,3 +30,7 @@
 
 ## Long term
 - Saving
+
+## Bugs
+- Polling can't tell the difference between a tap or a hold. Not a huge problem, but should be check out eventually.
+- Animation stops prematurely when stoppping to walk.

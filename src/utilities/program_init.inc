@@ -130,12 +130,12 @@ program_init:
 
 ;;TODO: temporary
 .setup_Keybindings:
-	mov		[playerKeyUp],			83
-	mov		[playerKeyDown],		87
+	mov		[playerKeyDown],		83
+	mov		[playerKeyUp],			87
 	mov		[playerKeyLeft],		65
 	mov		[playerKeyRight],		68
-	mov		[playerKeyConfirm],		0
-	mov		[playerKeyCancel],		1
+	mov		[playerKeyConfirm],		69;0
+	mov		[playerKeyCancel],		81;1
 	mov		[playerKeyStart],		257
 	mov		[playerKeySelect],		259
 

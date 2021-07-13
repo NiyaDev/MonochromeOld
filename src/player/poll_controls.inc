@@ -5,55 +5,38 @@
 
 
 ;;=  Polls currently stored controls
-;;=		INPUT:		RCX = control
+;;=		Input:		RCX = control
 ;;=						0:Down		1:Up		2:Left		3:Right
 ;;=						4:Confirm	5:Cancel	6:Start		7:Select
 ;;=		Output:		RAX = buttonData
 ;;=						0:None		1:Tap		2:Hold
-pooll_controls_new:
-	sub		rsp,	28h
-
-	add		rsp,	28h
-	ret
-
-	
-;;=  Polls currently stored controls
-;;=		INPUT:		RCX = control
-;;=						0:Down		1:Up		2:Left		3:Right
-;;=						4:Confirm	5:Cancel	6:Start		7:Select
-;;=		Output:		RAX = buttonData
-;;=						0:None		1:Tap		2:Hold
+controlNumber		equ		rcx		;Input
 output				equ		rax		;Output
 
-outputWord			equ		ax
-selectionHigh		equ		ch
-selectionWord		equ		cx
-selectionDword		equ		ecx
-
 playerMemory		equ		r8
-playerDirection		equ		r8+PlayerData.ctrData.direction
+playerInput			equ		r8+PlayerData.ctrData.input
+playerTap			equ		r8+PlayerData.ctrData.tap
 poll_controls:
 	sub		rsp,	28h
+	push	rbx
 
 .initialize:
 	xor		output,					output
-	xor		selectionHigh,			selectionHigh
 	mov		playerMemory,			[player_memory]
-
-;;TODO: Test if the control byte is greater than 3,
-;;TODO: If so, poll in action, rather than direction
+	mov		rbx,					[playerInput]
 
 .poll:
-	bt		[playerDirection],		selectionDword
+	bt		rbx,					controlNumber
 	jnc		.exit
+	inc		output
+;	shl		controlNumber,			64
 
-	add		outputWord,				1
-	add		selectionWord,			12
-	bt		[playerDirection],		selectionDword
+	add		rbx,					64
+	bt		rbx,					controlNumber
 	jnc		.exit
-
-	add		outputWord,				1
+	inc		output
 
 .exit:
+	pop		rbx
 	add		rsp,	28h
 	ret

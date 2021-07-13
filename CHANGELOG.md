@@ -5,8 +5,10 @@
 ### Changed
 - Heavy refactorization
 - Split player_controls.inc, memory.inc, and movement_overworld.inc into seperate files
+- Changed set and polling input functions to work with action buttons as well
+	- BUG: Polling can't tell the difference between a tap or a hold. Not a huge problem, but should be check out eventually.
 ### Removed
-- Deleted Sprite_legacy.inc as backups have been made if necesary
+- Deleted Sprite_legacy.inc and monochromeOLDGUI.asm as backups have been made if necesary
 
 ## [0.1.0] - 21/6/6 -> 21/6/13
 ### Changed

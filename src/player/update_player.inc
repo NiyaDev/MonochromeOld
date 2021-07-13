@@ -5,7 +5,7 @@
 
 
 ;;=  Updates overworld player's movement and sprite
-;;=		INPUT:		N/A
+;;=		Input:		N/A
 ;;=		Output:		N/A
 output				equ		rax
 controls			equ		al
@@ -30,8 +30,7 @@ update_player:
 	xor		rdx,rdx
 
 .set_controls:
-;	call	set_controls
-	call	set_controls_new
+	call	set_controls
 
 .init:
 	xor		pollSelection,			pollSelection

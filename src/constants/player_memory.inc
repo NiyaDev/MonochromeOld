@@ -14,6 +14,7 @@ struc PlayerData {
 }	;110-bytes
 struc ControlData {
 	.input			dq		0
+	.tap			dq		0
 	.direction		dd		0
 	.action			dd		0
 }
