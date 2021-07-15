@@ -50,6 +50,9 @@ draw:
 	mov		drawAnimatedInputD,		[playerWorldPos]
 	call	draw_animated_sprite
 
+.draw_ui:
+	call	draw_ui
+
 .ender_render_camera:
 	call	EndMode2D
 
@@ -62,3 +65,4 @@ draw:
 
 
 include '../sprites/sprite_rendering.inc'
+include '../UI/draw_ui.inc'

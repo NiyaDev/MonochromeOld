@@ -28,6 +28,7 @@ playerRectHeight	equ		rax+PlayerData.entity.sprite.rect.height
 generalMemory		equ		r8
 generalOffset		equ		r8+100
 generalImage		equ		r8+GeneralImage
+generalPause		equ		r8+PauseMenuSprite
 
 playerMemory		equ		r8
 playerTexture		equ		r8+PlayerData.entity.sprite.texture
@@ -96,6 +97,12 @@ program_init:
 	lea		importSpriteInputD,		[generalOffset]
 	call	import_sprite
 
+.initialize_pause_menu_sprite:
+	lea		importSpriteInputC,		[mause_menu_bg]
+	mov		generalMemory,			[general_memory]
+	lea		importSpriteInputD,		[generalPause]
+	call	import_sprite
+
 .initialize_player_sprites:
 	lea		importSpriteInputC,		[player_overworld_m_text]
 	mov		playerMemory,			[player_memory]
@@ -118,7 +125,6 @@ program_init:
 	mov		offsetMover,			[animationOffset]
 	mov		[playerFrameTime],		8h
 	mov		[playerCurClip],		offsetMover
-	mov		[playerDirection],		0
 
 .setup_camera:
 	mov		playerMemory,			[player_memory]

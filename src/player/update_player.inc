@@ -23,6 +23,7 @@ playerMoving		equ		r8+PlayerData.entity.isMoving
 playerTilePos		equ		r8+PlayerData.entity.tilePos
 playerWorldPos		equ		r8+PlayerData.entity.worldPos
 playerDirection		equ		r8+PlayerData.entity.direction
+playerMenu			equ		r8+PlayerData.ctrData.menu
 animation			equ		r10
 animationByte		equ		r10b
 update_player:
@@ -35,6 +36,24 @@ update_player:
 .init:
 	xor		pollSelection,			pollSelection
 	mov		playerMemory,			[player_memory]
+
+.check_start:
+	mov		pollLower,				6
+	call	poll_controls
+
+	cmp		controls,				1
+	jne		.poll_down
+	;;Pause menu
+	;;TODO: have pause menu stop player movement
+	cmp		[playerMenu],			1
+	jnz		.set
+.reset:
+	mov		[playerMenu],			0
+	jmp		.leave
+.set:
+	mov		[playerMenu],			1
+.leave:
+
 .poll_down:
 	mov		pollLower,				dirDown
 	call	poll_controls

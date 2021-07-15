@@ -27,3 +27,4 @@ GeneralImageHeight	equ		35
 GeneralImageMipMap	equ		39
 GeneralImageFormat	equ		43
 
+PauseMenuSprite		equ		50
