@@ -29,6 +29,7 @@ generalMemory		equ		r8
 generalOffset		equ		r8+100
 generalImage		equ		r8+GeneralImage
 generalPause		equ		r8+PauseMenuSprite
+generalCursor		equ		r8+CursorSprite
 
 playerMemory		equ		r8
 playerTexture		equ		r8+PlayerData.entity.sprite.texture
@@ -36,6 +37,7 @@ playerFrameTime		equ		r8+PlayerData.entity.sprite.frameTime
 playerCurClip		equ		r8+PlayerData.entity.sprite.curClip
 
 playerDirection		equ		r8+PlayerData.ctrData.direction
+playerCursorLoc		equ		r8+PlayerData.ctrData.cursorLoc
 
 playerCameraTargetX	equ		r8+PlayerData.camera.target.x
 playerCameraTargetY	equ		r8+PlayerData.camera.target.y
@@ -97,10 +99,15 @@ program_init:
 	lea		importSpriteInputD,		[generalOffset]
 	call	import_sprite
 
-.initialize_pause_menu_sprite:
-	lea		importSpriteInputC,		[mause_menu_bg]
+.initialize_menu_sprites:
+	lea		importSpriteInputC,		[pause_menu_bg]
 	mov		generalMemory,			[general_memory]
 	lea		importSpriteInputD,		[generalPause]
+	call	import_sprite
+
+	lea		importSpriteInputC,		[cursor_spr]
+	mov		generalMemory,			[general_memory]
+	lea		importSpriteInputD,		[generalCursor]
 	call	import_sprite
 
 .initialize_player_sprites:

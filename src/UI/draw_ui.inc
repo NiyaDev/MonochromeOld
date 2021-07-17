@@ -15,6 +15,7 @@ drawTextureInput9	equ		r9
 
 playerMemory		equ		r8
 playerMenu			equ		r8+PlayerData.ctrData.menu
+playerCursorLoc		equ		r8+PlayerData.ctrData.cursorLoc
 playerWorldPos		equ		r8+PlayerData.entity.worldPos
 playerWorldPosX		equ		r8+PlayerData.entity.worldPos.x
 playerWorldPosY		equ		r8+PlayerData.entity.worldPos.y
@@ -25,6 +26,7 @@ generalVector2		equ		r9+GeneralVector2
 generalVector2X		equ		r9+GeneralVector2X
 generalVector2Y		equ		r9+GeneralVector2Y
 generalMenuSprite	equ		r9+PauseMenuSprite
+generalCursorSprite	equ		r9+CursorSprite
 draw_ui:
 	sub		rsp,	28h
 
@@ -34,7 +36,7 @@ draw_ui:
 	cmp		[playerMenu],			1
 	jne		.exit
 
-.grab_sprite:
+.grab_menu_sprite:
 	mov		generalMemory,			[general_memory]
 	lea		drawTextureInputC,		[generalMenuSprite]
 .generate_x:
@@ -49,7 +51,29 @@ draw_ui:
 	fstp	dword[generalVector2Y]
 .grab_vector2:
 	mov 	drawTextureInputD,		[generalVector2]
-.draw_sprite:
+.draw_menu:
+	mov 	drawTextureInput8,		WHITE
+	call	DrawTextureV
+
+.grab_cursor_sprite:
+	mov		playerMemory,			[player_memory]
+	mov		generalMemory,			[general_memory]
+	lea		drawTextureInputC,		[generalCursorSprite]
+.generate_cursor_x:
+	mov		dword[generalDword],	32f
+	fld		dword[generalVector2X]
+	fadd	dword[generalDword]
+	fstp	dword[generalVector2X]
+.generate_cursor_y:
+	mov		dword[generalDword],	64f
+	fild	dword[playerCursorLoc]
+	fmul	dword[generalDword]
+	fadd	dword[generalDword]
+	fadd	dword[generalVector2Y]
+	fstp	dword[generalVector2Y]
+.grab_cursor_vector2:
+	mov 	drawTextureInputD,		[generalVector2]
+.draw_cursor:
 	mov 	drawTextureInput8,		WHITE
 	call	DrawTextureV
 

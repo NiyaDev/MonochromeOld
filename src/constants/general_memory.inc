@@ -28,3 +28,4 @@ GeneralImageMipMap	equ		39
 GeneralImageFormat	equ		43
 
 PauseMenuSprite		equ		50
+CursorSprite		equ		70

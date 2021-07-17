@@ -25,9 +25,11 @@ playerWorldPos		equ		r8+PlayerData.entity.worldPos
 playerDirection		equ		r8+PlayerData.entity.direction
 playerMenu			equ		r8+PlayerData.ctrData.menu
 playerMenuTimer		equ		r8+PlayerData.ctrData.menuTimer
+playerCursorLoc		equ		r8+PlayerData.ctrData.cursorLoc
 animation			equ		r10
 animationByte		equ		r10b
 ;;TODO: Clean up this code into multiple functions
+;;TODO: This needs to be done BADLY
 update_player:
 	sub		rsp,	28h
 	xor		rdx,rdx
@@ -39,77 +41,35 @@ update_player:
 	xor		pollSelection,			pollSelection
 	mov		playerMemory,			[player_memory]
 
-.timers:
-	lea		rcx,					[playerMenuTimer]
-	call	update_timer
-
-.check_start:
-	mov		pollLower,				6
-	call	poll_controls
-
-	cmp		controls,				1
-	jne		.pause_check
-	;;Pause menu
-	cmp		[playerMenuTimer],		0
-	jne		.pause_check
-
-	mov		[playerMenuTimer],		30
-
-	cmp		[playerMenu],			1
-	je		.reset
-	jne		.set
-
-.reset:
-	mov		[playerMenu],			0
-	jmp		.pause_check
-.set:
-	mov		[playerMenu],			1
+;;----------------------;;
+;;      Pause menu      ;;
+;;----------------------;;
+	call 	check_pause_menu
 
 .pause_check:
 	cmp		[playerMenu],			1
-	je		.no_controls_pressed
+	je		.menu_move_init
 
-.poll_down:
-	mov		pollLower,				dirDown
+;;----------------------;;
+;;  Overworld Movement	;;
+;;----------------------;;
+.overworld_move_init:
+	xor		pollLower,				pollLower
+	mov		animation,				3
+.overworld_move_loop:
 	call	poll_controls
 
-	mov		animation,				4
+	inc		pollLower
+	inc		animation
+
 	cmp		controls,				1
 	je		.tap
 	cmp		controls,				2
 	je		.hold
-.poll_up:
-	mov		pollLower,				dirUp
-	call	poll_controls
 
-	mov		animation,				5
-	cmp		controls,				1
-	je		.tap
-	cmp		controls,				2
-	je		.hold
-.poll_left:
-	mov		pollLower,				dirLeft
-	call	poll_controls
-
-	mov		animation,				6
-	cmp		controls,				1
-	je		.tap
-	cmp		controls,				2
-	je		.hold
-.poll_right:
-	mov		pollLower,				dirRight
-	call	poll_controls
-
-	mov		animation,				7
-	cmp		controls,				1
-	je		.tap
-	cmp		controls,				2
-	je		.hold
-.no_controls_pressed:
-	cmp		[playerMoving],			1
-	jne		.idle_animation
-	jmp		.exit
-
+	cmp		animation,				7
+	jg		.no_controls_pressed
+	jle		.overworld_move_loop
 
 .hold:
 	mov		[playerDirection],		animationByte
@@ -119,6 +79,54 @@ update_player:
 	mov		[playerDirection],		animationByte
 	sub		[playerDirection],		4
 	jmp		.player_movement
+
+.menu_move_init:
+	cmp		[playerMenuTimer],		0
+	jne		.no_controls_pressed
+
+	xor		pollSelection,			pollSelection
+.menu_move_loop:
+	call	poll_controls
+
+	cmp		controls,				1
+	je		.menu_move
+
+	inc		pollLower
+
+	cmp		pollLower,				1
+	jg		.exit
+	jle		.menu_move_loop
+
+.menu_move:
+	cmp		pollLower,				20h
+	je		.increase
+	jne		.decrease
+
+.increase:
+	mov		[playerMenuTimer],		10
+	cmp		[playerCursorLoc],		6
+	je		.set_min
+	inc		[playerCursorLoc]
+	jmp		.no_controls_pressed
+.decrease:
+	mov		[playerMenuTimer],		10
+	cmp		[playerCursorLoc],		0
+	je		.set_max
+	dec		[playerCursorLoc]
+	jmp		.no_controls_pressed
+
+.set_min:
+	mov		[playerCursorLoc],		0
+	jmp		.no_controls_pressed
+.set_max:
+	mov		[playerCursorLoc],		6
+	jmp		.no_controls_pressed
+
+
+.no_controls_pressed:
+	cmp		[playerMoving],			1
+	jne		.idle_animation
+	jmp		.exit
 
 
 .player_movement:
@@ -152,3 +160,6 @@ update_player:
 .no_sub:
 	call	change_animated_sprite
 	jmp		.exit
+
+
+include 'overworld_controls/pause_menu.inc'
