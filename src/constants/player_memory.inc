@@ -16,6 +16,7 @@ struc ControlData {
 	.input			dq		0
 	.tap			dq		0
 	.menu			db		0
+	.menuTimer		db		0
 }
 ;;TODO: Remove once settings is done
 struc KeyBindings {

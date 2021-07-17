@@ -12,6 +12,7 @@
 ;;=						0:None		1:Tap		2:Hold
 controlNumber		equ		rcx		;Input
 output				equ		rax		;Output
+compared			equ		rbx
 
 playerMemory		equ		r8
 playerInput			equ		r8+PlayerData.ctrData.input
@@ -23,16 +24,15 @@ poll_controls:
 .initialize:
 	xor		output,					output
 	mov		playerMemory,			[player_memory]
-	mov		rbx,					[playerInput]
+	mov		compared,				[playerInput]
 
 .poll:
-	bt		rbx,					controlNumber
+	bt		compared,				controlNumber
 	jnc		.exit
 	inc		output
-;	shl		controlNumber,			64
+	add		controlNumber,			32
 
-	add		rbx,					64
-	bt		rbx,					controlNumber
+	bt		compared,				controlNumber
 	jnc		.exit
 	inc		output
 

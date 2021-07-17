@@ -43,6 +43,7 @@ include 'routines/update.inc'
 include 'routines/draw.inc'
 include 'utilities/program_init.inc'
 include 'utilities/program_exit.inc'
+include 'utilities/timers.inc'
 
 
 include 'data.inc'

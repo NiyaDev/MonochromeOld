@@ -1,22 +1,20 @@
 
 # Todo
 
-## Short term
+## [0.2.0] - Overworld
 - Menu system
-	- Encyclopedia
-	- Monsters
-	- Inventory
+	- Encyclopedia  (JFS)
+	- Monsters  (JFS)
+	- Inventory  (JFS)
 	- Player
-	- Save
+		- Player data
+		- Quests
+	- Save  (JFS)
 	- Options
-		- Prio
 	- Quit
 
-## Medium term
-- Textbox system
-	- Imports text at start
-	- Talking to NPCs
-	- Walking on certain spots
+- Cleanup update_player.inc
+
 - Map
 	- Importing map data from file
 	- Importing tiles from file
@@ -24,13 +22,21 @@
 	- Spawning NPCs
 	- Warp points
 		- Can take you to different points on map or to different maps.
+
+- Textbox system
+	- Imports text at start
+	- Talking to NPCs
+	- Walking on certain spots
+
+## [0.3.0] - Combat
+- Monsters
+
 - Combat
 	- Different movement system
-- Make it work on Linux
 
-## Long term
+## Undecided
+- Inventory
+- Make it work on Linux
 - Saving
 
 ## Bugs
-- Polling can't tell the difference between a tap or a hold. Not a huge problem, but should be check out eventually.
-- Animation stops prematurely when stoppping to walk.

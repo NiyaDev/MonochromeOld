@@ -11,6 +11,7 @@ extrn 'ClearBackground' as ClearBackground
 extrn 'BeginMode2D' as BeginMode2D
 extrn 'DrawRectangle' as DrawRectangle
 extrn 'DrawTexture' as DrawTexture
+extrn 'DrawTextureV' as DrawTextureV
 extrn 'EndMode2D' as EndMode2D
 extrn 'EndDrawing' as EndDrawing
 extrn 'DrawTextureRec' as DrawTextureRec
