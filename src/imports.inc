@@ -29,4 +29,6 @@ extrn 'MemFree' as MemFree
 extrn 'CloseWindow' as CloseWindowRL
 extrn 'IsMouseButtonDown' as IsMouseButtonDown
 extrn 'LoadFont' as LoadFont
+extrn 'GetFontDefault' as GetFontDefault
+extrn 'DrawText' as DrawText
 extrn 'DrawTextEx' as DrawTextEx

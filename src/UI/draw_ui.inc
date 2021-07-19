@@ -79,32 +79,46 @@ draw_ui:
 	call	DrawTextureV
 
 .draw_test_text:
-	mov		playerMemory,			[player_memory]
-	mov		generalMemory,			[general_memory]
-	lea		rcx,					[generalFont]
-	lea		rdx,					[title]
-
-	mov		dword[generalVector2X],	0f
-	mov		dword[generalVector2Y],	0f
-	mov		r8,						[generalVector2]
-	
+;	mov		playerMemory,			[player_memory]
+;	mov		generalMemory,			[general_memory]
+;
+;	lea		rcx,					[generalFont]
+;	lea		rdx,					[temp_text]
+;	
 ;.generate_text_x:
-;	mov		dword[generalDword],	0f
+;	mov		dword[generalDword],	0f;132f
 ;	fld		dword[playerWorldPosX]
 ;	fadd	dword[generalDword]
 ;	fstp	dword[generalVector2X]
 ;.generate_text_y:
-;	mov		dword[generalDword],	0f
+;	mov		dword[generalDword],	0f;176f
 ;	fld		dword[playerWorldPosY]
-;	fadd	dword[generalDword]
+;	fsub	dword[generalDword]
 ;	fstp	dword[generalVector2Y]
 ;.grab_text_vector2:
 ;	mov 	r8,						[generalVector2]
+;
+;	mov		r9d,						10f;40f
+;	mov		dword [rsp+0x20],			2f
+;	mov		dword [rsp+0x28],			BLACK
+;	call	DrawTextEx
 
-	mov		r9d,						10f
-	mov		dword [rsp+0x20],			2f
-	mov		dword [rsp+0x28],			BLACK
-	call	DrawTextEx
+	mov		playerMemory,			[player_memory]
+	mov		generalMemory,			[general_memory]
+	lea		rcx,	[temp_text]
+
+	fld		dword[playerWorldPosX]
+	fistp	dword[generalDword]
+	mov		edx,[generalDword]
+	add		edx,132
+	fld		dword[playerWorldPosY]
+	fistp	dword[generalDword]
+	mov		r8d,[generalDword]
+	sub		r8d,176
+
+	mov		r9,		40
+	mov		dword [rsp+0x20],			BLACK
+	call	DrawText
 
 .exit:
 	add		rsp,	48h

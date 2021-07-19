@@ -92,3 +92,12 @@ struc Texture2D {
 	.format		dd			?
 }
 TEXTURE2D_SIZE	equ 20
+
+struc Font {
+	.baseSize		dd			?
+	.charsCount		dd			?
+	.charsPadding	dd			?
+	.texture		Texture2D
+	.recs			dq			?
+	.chars			dq			?
+}
