@@ -6,6 +6,7 @@
 
 ;;=  Initializes all necessary systems and memory spaces
 allocateMemoryOut	equ		rax
+fontOutput			equ		rax
 offsetMover			equ		rbx
 initWindowInputC	equ		ecx
 targetFPSInput		equ		ecx
@@ -14,9 +15,11 @@ loadImageInputC		equ		rcx
 setIconInput		equ		rcx
 unloadImageInput	equ		rcx
 importSpriteInputC	equ		rcx
+importFontC			equ		rcx
 initWindowInputD	equ		edx
 loadImageInputD		equ		rdx
 importSpriteInputD	equ		rdx
+importFontD			equ		rdx
 initWindowInput8	equ		r8
 
 playerRect			equ		rax
@@ -26,7 +29,8 @@ playerRectWidth		equ		rax+PlayerData.entity.sprite.rect.width
 playerRectHeight	equ		rax+PlayerData.entity.sprite.rect.height
 
 generalMemory		equ		r8
-generalOffset		equ		r8+100
+generalOffset		equ		r8+TempMap
+generalFont			equ		r8+Font
 generalImage		equ		r8+GeneralImage
 generalPause		equ		r8+PauseMenuSprite
 generalCursor		equ		r8+CursorSprite
@@ -98,6 +102,12 @@ program_init:
 	mov		generalMemory,			[general_memory]
 	lea		importSpriteInputD,		[generalOffset]
 	call	import_sprite
+
+.initialize_font:
+	mov		generalMemory,			[general_memory]
+	lea		importFontC,			[generalFont]
+	lea		importFontD,			[font_text]
+	call	LoadFont
 
 .initialize_menu_sprites:
 	lea		importSpriteInputC,		[pause_menu_bg]

@@ -27,5 +27,8 @@ GeneralImageHeight	equ		35
 GeneralImageMipMap	equ		39
 GeneralImageFormat	equ		43
 
-PauseMenuSprite		equ		50
-CursorSprite		equ		70
+Font				equ		  50
+PauseMenuSprite		equ		 102
+CursorSprite		equ		 122
+
+TempMap				equ		1000

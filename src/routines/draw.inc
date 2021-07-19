@@ -20,7 +20,7 @@ playerSprite		equ		r8+PlayerData.entity.sprite
 playerWorldPos		equ		r8+PlayerData.entity.worldPos
 
 generalMemory		equ		r8
-generalPtr			equ		r8+100
+generalPtr			equ		r8+TempMap
 draw:
 	sub		rsp,	$28
 

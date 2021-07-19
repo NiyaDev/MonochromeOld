@@ -19,7 +19,7 @@ public start as 'WinMain'
 
 
 ;;=  Main function
-MAIN_shouldClose	equ		rax
+MAIN_shouldClose	equ		al
 start:
 	sub		rsp,	8
 	sub		rsp,	$100

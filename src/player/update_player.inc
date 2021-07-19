@@ -48,81 +48,29 @@ update_player:
 
 .pause_check:
 	cmp		[playerMenu],			1
-	je		.menu_move_init
+	je		.menu_control
 
 ;;----------------------;;
 ;;  Overworld Movement	;;
 ;;----------------------;;
-.overworld_move_init:
-	xor		pollLower,				pollLower
-	mov		animation,				3
-.overworld_move_loop:
-	call	poll_controls
-
-	inc		pollLower
-	inc		animation
-
-	cmp		controls,				1
-	je		.tap
-	cmp		controls,				2
-	je		.hold
-
-	cmp		animation,				7
-	jg		.no_controls_pressed
-	jle		.overworld_move_loop
-
-.hold:
-	mov		[playerDirection],		animationByte
-	mov		[playerMoving],			1
-	jmp		.player_movement
-.tap:
-	mov		[playerDirection],		animationByte
-	sub		[playerDirection],		4
-	jmp		.player_movement
-
-.menu_move_init:
-	cmp		[playerMenuTimer],		0
+.overworld_control:
+	call	movement_controls
+	cmp		rax,0
+	je		.player_movement
 	jne		.no_controls_pressed
 
-	xor		pollSelection,			pollSelection
-.menu_move_loop:
-	call	poll_controls
-
-	cmp		controls,				1
-	je		.menu_move
-
-	inc		pollLower
-
-	cmp		pollLower,				1
-	jg		.exit
-	jle		.menu_move_loop
-
-.menu_move:
-	cmp		pollLower,				20h
-	je		.increase
-	jne		.decrease
-
-.increase:
-	mov		[playerMenuTimer],		10
-	cmp		[playerCursorLoc],		6
-	je		.set_min
-	inc		[playerCursorLoc]
-	jmp		.no_controls_pressed
-.decrease:
-	mov		[playerMenuTimer],		10
-	cmp		[playerCursorLoc],		0
-	je		.set_max
-	dec		[playerCursorLoc]
+;;----------------------;;
+;;     Menu Movement    ;;
+;;----------------------;;
+.menu_control:
+	call	ui_controls
 	jmp		.no_controls_pressed
 
-.set_min:
-	mov		[playerCursorLoc],		0
-	jmp		.no_controls_pressed
-.set_max:
-	mov		[playerCursorLoc],		6
-	jmp		.no_controls_pressed
-
-
+;;----------------------;;
+;;    Menu Selection    ;;
+;;----------------------;;
+.menu_selection:
+	
 .no_controls_pressed:
 	cmp		[playerMoving],			1
 	jne		.idle_animation
@@ -163,3 +111,5 @@ update_player:
 
 
 include 'overworld_controls/pause_menu.inc'
+include 'overworld_controls/movement_controls.inc'
+include 'overworld_controls/ui_controls.inc'

@@ -27,8 +27,9 @@ generalVector2X		equ		r9+GeneralVector2X
 generalVector2Y		equ		r9+GeneralVector2Y
 generalMenuSprite	equ		r9+PauseMenuSprite
 generalCursorSprite	equ		r9+CursorSprite
+generalFont			equ		r9+Font
 draw_ui:
-	sub		rsp,	28h
+	sub		rsp,	48h
 
 .init:
 	mov		playerMemory,			[player_memory]
@@ -77,6 +78,34 @@ draw_ui:
 	mov 	drawTextureInput8,		WHITE
 	call	DrawTextureV
 
+.draw_test_text:
+	mov		playerMemory,			[player_memory]
+	mov		generalMemory,			[general_memory]
+	lea		rcx,					[generalFont]
+	lea		rdx,					[title]
+
+	mov		dword[generalVector2X],	0f
+	mov		dword[generalVector2Y],	0f
+	mov		r8,						[generalVector2]
+	
+;.generate_text_x:
+;	mov		dword[generalDword],	0f
+;	fld		dword[playerWorldPosX]
+;	fadd	dword[generalDword]
+;	fstp	dword[generalVector2X]
+;.generate_text_y:
+;	mov		dword[generalDword],	0f
+;	fld		dword[playerWorldPosY]
+;	fadd	dword[generalDword]
+;	fstp	dword[generalVector2Y]
+;.grab_text_vector2:
+;	mov 	r8,						[generalVector2]
+
+	mov		r9d,						10f
+	mov		dword [rsp+0x20],			2f
+	mov		dword [rsp+0x28],			BLACK
+	call	DrawTextEx
+
 .exit:
-	add		rsp,	28h
+	add		rsp,	48h
 	ret

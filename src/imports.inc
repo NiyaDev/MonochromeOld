@@ -28,3 +28,5 @@ extrn 'UnloadFileData' as UnloadFileData
 extrn 'MemFree' as MemFree
 extrn 'CloseWindow' as CloseWindowRL
 extrn 'IsMouseButtonDown' as IsMouseButtonDown
+extrn 'LoadFont' as LoadFont
+extrn 'DrawTextEx' as DrawTextEx
