@@ -24,7 +24,7 @@ section '.data' readable writeable
 	pause_menu_bg				db		'data/sprites/UI/pause_menu.png',0
 	cursor_spr					db		'data/sprites/UI/cursor.png',0
 
-	temp_text					db		'PWIKI',0
+	temp_text					db		'WIKI',10,'MONs',10,'ITEMS',10,'PLAYER',10,'SAVE',10,'OPTIONS',10,'QUIT',0
 
 
 ;;=  Windows

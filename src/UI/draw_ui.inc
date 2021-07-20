@@ -8,10 +8,23 @@
 ;;=  Draws UI elements
 ;;=		Input:		N/A
 ;;=		Output:		N/A
+;;TODO: Go through every external function and define variables
+;;	void DrawTexture(Texture2D texture, int posX, int posY, Color tint);
+;;	texture				equ		rcx
+;;	posX				equ		rdx
+;;	posY				equ		r8
+;;	tint				equ		r9
 drawTextureInputC	equ		rcx
 drawTextureInputD	equ		rdx
 drawTextureInput8	equ		r8
 drawTextureInput9	equ		r9
+
+drawTextExInputC	equ		rcx
+drawTextExInputD	equ		rdx
+drawTextExInput8	equ		r8
+drawTextExInputX0	equ		xmm0
+drawTextExInputX3	equ		xmm3
+drawTextExInputSt	equ		dword [rsp+0x28]
 
 playerMemory		equ		r8
 playerMenu			equ		r8+PlayerData.ctrData.menu
@@ -83,8 +96,8 @@ draw_ui:
 	mov		playerMemory,			[player_memory]
 	mov		generalMemory,			[general_memory]
 
-	lea		rcx,					[generalFont]
-	lea		rdx,					[temp_text]
+	lea		drawTextExInputC,		[generalFont]
+	lea		drawTextExInputD,		[temp_text]
 	
 .generate_text_x:
 	mov		dword[generalDword],	128f
@@ -92,18 +105,18 @@ draw_ui:
 	fadd	dword[generalDword]
 	fstp	dword[generalVector2X]
 .generate_text_y:
-	mov		dword[generalDword],	172f;176f;180f
+	mov		dword[generalDword],	172f
 	fld		dword[playerWorldPosY]
 	fsub	dword[generalDword]
 	fstp	dword[generalVector2Y]
 .grab_text_vector2:
-	mov 	r8,						[generalVector2]
+	mov 	drawTextExInput8,		[generalVector2]
 
-	mov		dword[generalDword],		32f
-	movss	xmm3,						[generalDword]
-	mov		dword[generalDword],		2f
-	movss	xmm0,						[generalDword]
-	mov		dword [rsp+0x28],			BLACK
+	mov		dword[generalDword],	32f
+	movss	drawTextExInputX3,		[generalDword]
+	mov		dword[generalDword],	0f
+	movss	drawTextExInputX0,		[generalDword]
+	mov		drawTextExInputSt,		BLACK
 	call	DrawTextEx
 
 .exit:

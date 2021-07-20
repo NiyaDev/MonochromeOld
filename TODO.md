@@ -40,3 +40,4 @@
 - Saving
 
 ## Bugs
+- Aliasing around text
