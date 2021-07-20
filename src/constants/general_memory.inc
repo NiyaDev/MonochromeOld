@@ -28,6 +28,7 @@ GeneralImageMipMap	equ		39
 GeneralImageFormat	equ		43
 
 Font				equ		  50
+FontTexture			equ		  62
 PauseMenuSprite		equ		 102
 CursorSprite		equ		 122
 

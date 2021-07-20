@@ -22,6 +22,7 @@ playerWorldPosY		equ		r8+PlayerData.entity.worldPos.y
 
 generalMemory		equ		r9
 generalDword		equ		r9+GeneralDword
+generalQword		equ		r9+GeneralQword
 generalVector2		equ		r9+GeneralVector2
 generalVector2X		equ		r9+GeneralVector2X
 generalVector2Y		equ		r9+GeneralVector2Y
@@ -79,46 +80,31 @@ draw_ui:
 	call	DrawTextureV
 
 .draw_test_text:
-;	mov		playerMemory,			[player_memory]
-;	mov		generalMemory,			[general_memory]
-;
-;	lea		rcx,					[generalFont]
-;	lea		rdx,					[temp_text]
-;	
-;.generate_text_x:
-;	mov		dword[generalDword],	0f;132f
-;	fld		dword[playerWorldPosX]
-;	fadd	dword[generalDword]
-;	fstp	dword[generalVector2X]
-;.generate_text_y:
-;	mov		dword[generalDword],	0f;176f
-;	fld		dword[playerWorldPosY]
-;	fsub	dword[generalDword]
-;	fstp	dword[generalVector2Y]
-;.grab_text_vector2:
-;	mov 	r8,						[generalVector2]
-;
-;	mov		r9d,						10f;40f
-;	mov		dword [rsp+0x20],			2f
-;	mov		dword [rsp+0x28],			BLACK
-;	call	DrawTextEx
-
 	mov		playerMemory,			[player_memory]
 	mov		generalMemory,			[general_memory]
-	lea		rcx,	[temp_text]
 
+	lea		rcx,					[generalFont]
+	lea		rdx,					[temp_text]
+	
+.generate_text_x:
+	mov		dword[generalDword],	128f
 	fld		dword[playerWorldPosX]
-	fistp	dword[generalDword]
-	mov		edx,[generalDword]
-	add		edx,132
+	fadd	dword[generalDword]
+	fstp	dword[generalVector2X]
+.generate_text_y:
+	mov		dword[generalDword],	172f;176f;180f
 	fld		dword[playerWorldPosY]
-	fistp	dword[generalDword]
-	mov		r8d,[generalDword]
-	sub		r8d,176
+	fsub	dword[generalDword]
+	fstp	dword[generalVector2Y]
+.grab_text_vector2:
+	mov 	r8,						[generalVector2]
 
-	mov		r9,		40
-	mov		dword [rsp+0x20],			BLACK
-	call	DrawText
+	mov		dword[generalDword],		32f
+	movss	xmm3,						[generalDword]
+	mov		dword[generalDword],		2f
+	movss	xmm0,						[generalDword]
+	mov		dword [rsp+0x28],			BLACK
+	call	DrawTextEx
 
 .exit:
 	add		rsp,	48h

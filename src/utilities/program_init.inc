@@ -31,6 +31,8 @@ playerRectHeight	equ		rax+PlayerData.entity.sprite.rect.height
 generalMemory		equ		r8
 generalOffset		equ		r8+TempMap
 generalFont			equ		r8+Font
+generalFontTexture	equ		r8+FontTexture
+generalFontMip		equ		r8+74
 generalImage		equ		r8+GeneralImage
 generalPause		equ		r8+PauseMenuSprite
 generalCursor		equ		r8+CursorSprite
