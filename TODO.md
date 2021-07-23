@@ -15,6 +15,8 @@
 
 - Cleanup update_player.inc
 
+- Create file manifest + Loader
+
 - Map
 	- Importing map data from file
 	- Importing tiles from file
