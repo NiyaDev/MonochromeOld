@@ -15,11 +15,11 @@ section '.data' readable writeable
 	;;=  FileNames
 	;;TODO: create a file manifest
 	icon_text					db		'data/Icon.png',0
+	font_text					db		'data/fonts/default.ttf',0
+	map_pallet					db		'data/maps/Temp.png',0
 	animations_text				db		'data/sprites/animations.bin',0
 	player_overworld_m_text		db		'data/sprites/characters/spr_player_overworld_m.png',0
 	player_overworld_f_text		db		'data/sprites/characters/spr_player_overworld_f.png',0
-	map_pallet					db		'data/maps/Temp.png',0
-	font_text					db		'data/fonts/default.ttf',0
 	pause_menu_bg				db		'data/sprites/UI/pause_menu.png',0
 	cursor_spr					db		'data/sprites/UI/cursor.png',0
 
