@@ -2,6 +2,11 @@
 # Todo
 
 ## [0.2.0] - Overworld
+
+- Full rework of file loading system
+
+- Create file manifest + Loader
+
 - Menu system
 	- Encyclopedia  (JFS)
 	- Monsters  (JFS)
@@ -14,8 +19,6 @@
 	- Quit
 
 - Cleanup update_player.inc
-
-- Create file manifest + Loader
 
 - Map
 	- Importing map data from file
